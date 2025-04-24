@@ -1,31 +1,12 @@
 <script setup lang="ts">
+import { defineEmits, defineProps, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import {
-  faHome,
-  faCompass,
-  faInbox,
-  faBell,
-  faPenNib,
-  faPenToSquare
-} from '@fortawesome/free-solid-svg-icons';
-import {
-  faCompass as faCompassRegular,
-  faBell as faBellRegular
-} from '@fortawesome/free-regular-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { isEmpty } from 'lodash';
-import { defineEmits, defineProps, ref } from 'vue';
+import { usePostStore } from '@/store/post';
 
-library.add(
-  faHome,
-  faCompass,
-  faInbox,
-  faBell,
-  faPenNib,
-  faPenToSquare,
-  faCompassRegular,
-  faBellRegular
-);
+library.add(faPenToSquare);
 
 const props = defineProps<{
   href: string;
@@ -42,6 +23,7 @@ const href = ref(props.href);
 const text = ref(props.text);
 const count = ref(props.count);
 const activeItem = ref(props.activeItem);
+const postStore = usePostStore();
 
 const handleClick = () => {
   emit('handleClick');
@@ -58,7 +40,7 @@ const handleClick = () => {
       @click="
         () => {
           handleClick(); // 關閉選單
-          // sliceDispatch(setShowCreateModal(true));
+          postStore.setShowCreateModal(true);
         }
       "
     >

@@ -2,12 +2,26 @@
 import { defineEmits, defineProps, ref } from 'vue';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+  faHome,
+  faPenNib,
+  faPenToSquare,
+  faSun,
+  faMoon,
+  faRightFromBracket,
+  faXmark
+} from '@fortawesome/free-solid-svg-icons';
+import { faCompass } from '@fortawesome/free-regular-svg-icons';
 import { isEmpty } from 'lodash';
 import { useMainStore } from '@/store';
 import { useUserStore } from '@/store/user';
 import { useRouter } from 'vue-router';
-import { checkLogin } from '@/utils/common';
+import { checkLogin, scrollToTop } from '@/utils/common';
 import MenuItem from '@/components/MenuItem.vue';
+
+library.add(faHome, faCompass, faPenNib, faPenToSquare, faSun, faMoon, faRightFromBracket, faXmark);
 
 const props = defineProps<{
   toggleMenuAnimation: string;
@@ -50,7 +64,10 @@ const handleLogout = () => {
     <button
       type="button"
       class="w-full h-full top-0 left-0 text-transparent"
-      :class="{ 'hidden': toggleMenuAnimation === 'translate-x-full', 'fixed': toggleMenuAnimation !== 'translate-x-full' }"
+      :class="{
+        hidden: toggleMenuAnimation === 'translate-x-full',
+        fixed: toggleMenuAnimation !== 'translate-x-full'
+      }"
       @click="closeMenu"
     />
     <!-- 選單內容 -->
@@ -60,12 +77,7 @@ const handleLogout = () => {
     >
       <div class="z-10 w-full flex justify-end py-2 px-4">
         <!-- 關閉選單 -->
-        <button
-          aria-label="close"
-          type="button"
-          class="flex justify-center m-1"
-          @click="closeMenu"
-        >
+        <button aria-label="close" type="button" class="flex justify-center m-1" @click="closeMenu">
           <font-awesome-icon
             :icon="['fas', 'xmark']"
             class="h-7 w-7 m-1 text-gray-900 dark:text-gray-100"
@@ -73,15 +85,17 @@ const handleLogout = () => {
         </button>
       </div>
       <div v-if="checkLogin()" class="px-3 border-b-[1px] border-gray-400 dark:border-gray-70">
-        <UserLoading v-if="isEmpty(userData)" withBorder={false} />
+        <UserLoading v-if="isEmpty(userData)" withBorder="{false}" />
         <router-link
           v-else
           to="/user/profile/{{userData!.userId}}"
-          @click="() => {
-            closeMenu();
-            mainStore.setActivePage('user');
-            // scrollToTop();
-          }"
+          @click="
+            () => {
+              closeMenu();
+              mainStore.setActivePage('user');
+              scrollToTop();
+            }
+          "
         >
           userInfo
           <!-- <UserInfoPanel
@@ -94,7 +108,6 @@ const handleLogout = () => {
             menuLink
           /> -->
         </router-link>
-
       </div>
       <div class="h-full py-2 px-8 opacity-100">
         <div class="text-left h-fit sm:px-1">
@@ -104,10 +117,12 @@ const handleLogout = () => {
               text="首頁"
               :count="0"
               :active-item="mainStore.activePage === '' || mainStore.activePage === 'home'"
-              @handle-click="() => {
-                closeMenu();
-                mainStore.setActivePage('home');
-              }"
+              @handle-click="
+                () => {
+                  closeMenu();
+                  mainStore.setActivePage('home');
+                }
+              "
             >
               <template #icon>
                 <font-awesome-icon :icon="['fas', 'home']" />
@@ -118,10 +133,12 @@ const handleLogout = () => {
               text="探索"
               :count="0"
               :active-item="mainStore.activePage === 'explore'"
-              @click="() => {
-                closeMenu();  
-                mainStore.setActivePage('explore');
-              }"
+              @click="
+                () => {
+                  closeMenu();
+                  mainStore.setActivePage('explore');
+                }
+              "
             >
               <template #icon>
                 <font-awesome-icon :icon="['far', 'compass']" />
@@ -133,12 +150,14 @@ const handleLogout = () => {
               text="撰寫文章"
               :count="0"
               :active-item="mainStore.activePage === 'write'"
-              @handle-click="() => {
-                closeMenu();
-                mainStore.setActivePage('write');
-                mainStore.setEditMode(true);
-                // scrollToTop();
-              }"
+              @handle-click="
+                () => {
+                  closeMenu();
+                  mainStore.setActivePage('write');
+                  mainStore.setEditMode(true);
+                  scrollToTop();
+                }
+              "
             >
               <template #icon>
                 <font-awesome-icon :icon="['fas', 'pen-nib']" />
@@ -159,7 +178,9 @@ const handleLogout = () => {
           </ul>
         </div>
       </div>
-      <div class="flex justify-between items-center p-3 border-t-[1px] border-gray-300 dark:border-gray-700">
+      <div
+        class="flex justify-between items-center p-3 border-t-[1px] border-gray-300 dark:border-gray-700"
+      >
         <!-- 深色模式切換 -->
         <button
           aria-label="darkMode"
