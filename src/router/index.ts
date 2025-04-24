@@ -51,7 +51,7 @@ const router = createRouter({
     //   component: ResetPasswordPage
     // },
     {
-      path: '*',
+      path: '/:pathMatch(.*)*',
       name: 'notFound',
       component: NotFoundPage
     }

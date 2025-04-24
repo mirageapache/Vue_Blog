@@ -4,9 +4,7 @@ import {
   SIDEBAR_CONTAINER_FRAME,
   BOTTOM_MENU_FRAME
 } from './constants/LayoutConstants';
-import Header from './components/Header.vue';
-import SideBar from './components/SideBar.vue';
-import BottomMenu from './components/BottomMenu.vue';
+import Header from '@/components/Header.vue';
 </script>
 
 <template>
@@ -16,12 +14,12 @@ import BottomMenu from './components/BottomMenu.vue';
         <main class="mb-auto mt-[52px] sm:mt-16 flex-grow flex justify-center">
           <div class="w-full flex justify-between">
             <section :class={SIDEBAR_FRAME}>
-              <SideBar />
+              <!-- <SideBar /> -->
             </section>
             <section :class={SIDEBAR_CONTAINER_FRAME}>
             </section>
             <section :class={BOTTOM_MENU_FRAME}>
-              <BottomMenu />
+              <!-- <BottomMenu /> -->
             </section>
           </div>
         </main>
