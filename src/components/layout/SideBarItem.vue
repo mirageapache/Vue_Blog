@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, computed } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -31,6 +31,9 @@ const activeItem = ref(props.activeItem);
 const showTip = ref(false);
 const activeStyle = 'text-orange-500 hover:text-orange-500 hover:fill-orange-500';
 const normalStyle = 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100';
+const linkStyle = computed(() => {
+  return activeItem.value ? activeStyle : normalStyle;
+});
 
 const changeItem = () => {
   emit('changeItem');
@@ -49,7 +52,7 @@ const setShowTip = (value: boolean) => {
       type="button"
       ref="createPostButton"
       class="flex my-1.5 ml-3 text-xl cursor-pointer py-4"
-      :class="{ normalStyle }"
+      :class="normalStyle"
       @click="() => postStore.setShowCreateModal(true)"
       @mouseenter="() => setShowTip(true)"
       @mouseleave="() => setShowTip(false)"
@@ -64,7 +67,7 @@ const setShowTip = (value: boolean) => {
       v-else
       :to="href"
       class="flex my-1.5 ml-3 text-xl cursor-pointer py-4"
-      :class="{ activeStyle: activeItem, normalStyle: !activeItem }"
+      :class="linkStyle"
       ref="navLink"
       @click="
         () => {

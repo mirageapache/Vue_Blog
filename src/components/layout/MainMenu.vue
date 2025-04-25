@@ -19,7 +19,7 @@ import { useMainStore } from '@/store';
 import { useUserStore } from '@/store/user';
 import { useRouter } from 'vue-router';
 import { checkLogin, scrollToTop } from '@/utils/common';
-import MenuItem from '@/components/MenuItem.vue';
+import MenuItem from '@/components/layout/MenuItem.vue';
 
 library.add(faHome, faCompass, faPenNib, faPenToSquare, faSun, faMoon, faRightFromBracket, faXmark);
 

@@ -9,8 +9,8 @@ import brand from '@/assets/vue.svg';
 import { useMainStore } from '@/store/index.ts';
 import { useAuthStore } from '@/store/auth';
 import { checkLogin } from '@/utils/common';
-import MainMenu from '@/components/MainMenu.vue';
-// import BackwardBtn from '@/components/BackwardBtn.vue';
+import MainMenu from '@/components/layout/MainMenu.vue';
+import BackwardBtn from '@/components/common/BackwardBtn.vue';
 
 library.add(faSearch, faBars, faUser, faUserPlus, faUserRegular);
 
@@ -26,7 +26,9 @@ const path = ref(window.location.pathname);
 const checkPath = () => {
   path.value = window.location.pathname;
   showBackward.value =
-    path.value.includes('/article/') || path.value.includes('/post/') || path.value.includes('/user/');
+    path.value.includes('/article/') ||
+    path.value.includes('/post/') ||
+    path.value.includes('/user/');
 };
 
 /** 跳轉至搜尋頁 */
@@ -61,11 +63,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="fixed z-20 flex justify-center w-full bg-white dark:bg-gray-950 border-b-[1px] dark:border-gray-700">
+  <header
+    class="fixed z-20 flex justify-center w-full bg-white dark:bg-gray-950 border-b-[1px] dark:border-gray-700"
+  >
     <div class="w-full flex justify-between py-2 px-4">
       <div class="block sm:hidden">
         <span class="flex justify-center items-center w-9 h-9">
-          <!-- <BackwardBtn v-if="showBackward" /> -->
+          <BackwardBtn v-if="showBackward" />
         </span>
       </div>
       <div id="brand" class="flex justify-center">
@@ -108,34 +112,31 @@ onUnmounted(() => {
           />
         </button>
         <div v-else class="flex justify-around items-center">
-            <!-- 登入 -->
-            <button
-              type="button"
-              class="flex items-center rounded-full text-white bg-sky-500 hover:bg-sky-700 p-2 md:px-4 md:py-1 dark:bg-sky-800"
-              @click="authStore.setSignInPop(true)"
-            >
-              <p class="hidden md:inline-block">登入</p>
-              <FontAwesomeIcon
-                :icon="['far', 'user']"
-                class="h-5 w-5 md:hidden dark:opacity-100"
-              />
-            </button>
-            <!-- 註冊 -->
-            <button
-              type="button"
-              class="hidden md:flex items-center rounded-full ml-2 p-2 md:px-4 md:py-1 text-gray-400 border border-gray-400 dark:text-gray-300"
-              @click="authStore.setSignUpPop(true)"
-            >
-              <p class="hidden md:inline-block">註冊</p>
-              <FontAwesomeIcon
-                :icon="['fas', 'user-plus']"
-                class="h-5 w-5 md:hidden dark:opacity-100"
-              />
-            </button>
-          </div>
+          <!-- 登入 -->
+          <button
+            type="button"
+            class="flex items-center rounded-full text-white bg-sky-500 hover:bg-sky-700 p-2 md:px-4 md:py-1 dark:bg-sky-800"
+            @click="authStore.setSignInPop(true)"
+          >
+            <p class="hidden md:inline-block">登入</p>
+            <FontAwesomeIcon :icon="['far', 'user']" class="h-5 w-5 md:hidden dark:opacity-100" />
+          </button>
+          <!-- 註冊 -->
+          <button
+            type="button"
+            class="hidden md:flex items-center rounded-full ml-2 p-2 md:px-4 md:py-1 text-gray-400 border border-gray-400 dark:text-gray-300"
+            @click="authStore.setSignUpPop(true)"
+          >
+            <p class="hidden md:inline-block">註冊</p>
+            <FontAwesomeIcon
+              :icon="['fas', 'user-plus']"
+              class="h-5 w-5 md:hidden dark:opacity-100"
+            />
+          </button>
+        </div>
       </nav>
 
-      <MainMenu 
+      <MainMenu
         :toggle-menu-animation="toggleMenuAnimation"
         @set-toggle-menu-animation="setToggleMenuAnimation"
       />

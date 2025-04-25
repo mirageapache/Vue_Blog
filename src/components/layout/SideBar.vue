@@ -11,7 +11,7 @@ import {
 import { checkLogin, getCookies } from '@/utils/common';
 import { useMainStore } from '@/store';
 import { useAuthStore } from '@/store/auth';
-import SideBarItem from '@/components/SideBarItem.vue';
+import SideBarItem from '@/components/layout/SideBarItem.vue';
 
 library.add(faHome, faCompass, faUser, faPenNib, faPenToSquare);
 
@@ -19,7 +19,6 @@ const mainStore = useMainStore();
 const authStore = useAuthStore();
 const activePage = mainStore.activePage;
 const userId = getCookies('uid');
-
 </script>
 
 <template>
@@ -52,13 +51,15 @@ const userId = getCookies('uid');
         text="個人資料"
         :count="0"
         :active-item="activePage === 'user'"
-        @change-item="() => {
-          if (checkLogin()) {
-            mainStore.setActivePage('user');
-          } else {
-            authStore.setSignInPop(true);
+        @change-item="
+          () => {
+            if (checkLogin()) {
+              mainStore.setActivePage('user');
+            } else {
+              authStore.setSignInPop(true);
+            }
           }
-        }"
+        "
       >
         <template #icon>
           <font-awesome-icon :icon="['fas', 'user']" />
@@ -70,24 +71,20 @@ const userId = getCookies('uid');
         text="撰寫文章"
         :count="0"
         :active-item="activePage === 'write'"
-        @change-item="() => {
-          mainStore.setActivePage('write');
-          mainStore.setEditMode(true);
-        }"
+        @change-item="
+          () => {
+            mainStore.setActivePage('write');
+            mainStore.setEditMode(true);
+          }
+        "
       >
         <template #icon>
           <font-awesome-icon :icon="['fas', 'pen-nib']" />
         </template>
       </SideBarItem>
-      <SideBarItem
-        v-if="checkLogin()"
-        href=""
-        text="建立貼文"
-        :count="0"
-        :active-item="false"
-      >
+      <SideBarItem v-if="checkLogin()" href="" text="建立貼文" :count="0" :active-item="false">
         <template #icon>
-          <font-awesome-icon icon="['fas', 'pen-to-square']"/>
+          <font-awesome-icon icon="['fas', 'pen-to-square']" />
         </template>
       </SideBarItem>
     </div>
