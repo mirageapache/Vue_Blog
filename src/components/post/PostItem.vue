@@ -25,7 +25,9 @@ const postStore = usePostStore();
 const router = useRouter();
 const showCreateTip = ref(false);
 const showEditTip = ref(false);
-const hiddenContent = ref(true);
+const contentArr = postData.content.match(/<div.*?<\/div>/g); // 將字串內容轉換成陣列
+  const contentLength = isEmpty(contentArr) ? 0 : contentArr!.length; // 貼文內容(段落數)
+const hiddenContent = ref(contentLength > 3 || content.length > 100 || false); // 是否隱藏貼文內容(段落數 > 3 或 字數 > 100)
 const iconName = ref(['fas', 'trash-can']);
 /** 點選貼文 */
 const handleClickPost = () => {
@@ -78,8 +80,8 @@ const handleDelete = (e: Event) => {
                 {{ formatDateTime(createdAt) }}
               </p>
               <span
-                class="top-[-25px] right-0 w-40"
-                :class="{ HINT_LABEL, block: showCreateTip, hidden: !showCreateTip }"
+                class="top-[-10px] right-0 w-40 z-10"
+                :class="[HINT_LABEL, showCreateTip ? 'block' : 'hidden']"
               >
                 Created at {{ moment(createdAt).format('MMMM Do YYYY, h:mm:ss') }}
               </span>
@@ -93,7 +95,7 @@ const handleDelete = (e: Event) => {
               <small class="text-gray-400">(已編輯)</small>
               <span
                 class="right-0 w-40"
-                :class="{ HINT_LABEL, block: showEditTip, hidden: !showEditTip }"
+                :class="[HINT_LABEL, showEditTip ? 'block' : 'hidden']"
               >
                 Edited at {{ moment(editedAt).format('MMMM Do YYYY, h:mm:ss') }}
               </span>
@@ -125,10 +127,14 @@ const handleDelete = (e: Event) => {
           <div
             id="post-container"
             class="text-gray-600 dark:text-gray-300"
-            :class="{ 'max-h-[300px] line-clamp-[10]': hiddenContent }"
+            :class="[hiddenContent ? 'max-h-[300px] line-clamp-[3]' : '']"
             v-html="content"
           />
-          <button v-if="hiddenContent" type="button" @click="hiddenContent = false">
+          <button
+            v-if="hiddenContent"
+            type="button"
+            class="text-[var(--brand-secondary-color)] hover:text-[var(--brand-color)]"
+            @click="hiddenContent = false">
             顯示更多
           </button>
         </div>

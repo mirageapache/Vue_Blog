@@ -29,8 +29,8 @@ const text = ref(props.text);
 const count = ref(props.count);
 const activeItem = ref(props.activeItem);
 const showTip = ref(false);
-const activeStyle = 'text-orange-500 hover:text-orange-500 hover:fill-orange-500';
-const normalStyle = 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100';
+const activeStyle = 'text-[var(--active)] hover:text-[var(--active)] hover:fill-[var(--active)]';
+const normalStyle = 'text-gray-700 dark:text-gray-300 hover:text-[var(--active)]';
 const linkStyle = computed(() => {
   return activeItem.value ? activeStyle : normalStyle;
 });
@@ -94,7 +94,7 @@ const setShowTip = (value: boolean) => {
 
     <div
       class="absolute top-3 left-10 w-16 lg:hidden dark:font-bold z-50"
-      :class="{ HINT_LABEL, block: showTip, hidden: !showTip }"
+      :class="[HINT_LABEL, showTip ? 'block' : 'hidden']"
     >
       {{ text }}
     </div>

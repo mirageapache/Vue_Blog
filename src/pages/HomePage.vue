@@ -2,6 +2,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { getPartialPosts } from '@/api/post';
 import PostListDynamic from '@/components/post/PostListDynamic.vue';
+import PostListLoading from '@/components/post/PostListLoading.vue';
 import type { PostDataType } from '@/types/postType';
 
 const page = ref(1);
@@ -31,7 +32,7 @@ onMounted(() => {
 <template>
   <div class="w-full max-w-[600px] p-1 sm:p-0">
     <div v-if="isLoading" class="text-center py-4">
-      載入中...
+      <PostListLoading />
     </div>
     <div v-else-if="postList.length === 0" class="text-center py-4">
       沒有找到貼文

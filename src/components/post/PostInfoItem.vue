@@ -48,7 +48,7 @@ const handleDelete = (event: Event) => {
       </p>
       <span
         class="top-[-25px] right-0"
-        :class="{ tipClass, HINT_LABEL, block: showTip, hidden: !showTip }"
+        :class="[tipClass, HINT_LABEL, showTip ? 'block' : 'hidden']"
       >
         {{ tipText }}
       </span>

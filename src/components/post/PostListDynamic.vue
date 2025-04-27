@@ -10,7 +10,6 @@ const props = defineProps<{
 }>();
 
 const { postListData, isLoading, atBottom } = props;
-
 </script>
 
 <template>
