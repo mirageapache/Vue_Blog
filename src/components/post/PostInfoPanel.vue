@@ -20,7 +20,8 @@ const props = defineProps<{
 }>();
 
 const userId = getCookies('uid');
-const post = reactive<PostDataType>(props.postData);
+const state = reactive({ post: props.postData });
+const { post } = state;
 const postStore = usePostStore();
 const authStore = useAuthStore();
 const showShareInfo = ref(false);
