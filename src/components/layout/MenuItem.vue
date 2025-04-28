@@ -54,7 +54,7 @@ const handleClick = () => {
       v-else
       :to="href"
       class="flex my-1.5 text-xl text-gray-700 fill-gray-700 dark:text-gray-300 dark:fill-gray-300 cursor-pointer hover:text-orange-500 hover:fill-orange-500 py-3"
-      :class="{ 'text-orange-500': activeItem }"
+      :class="{ 'text-[var(--active)]': activeItem }"
       @click="handleClick()"
     >
       <span class="flex items-center">

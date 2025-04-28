@@ -20,7 +20,9 @@ import BottomMenu from '@/components/layout/BottomMenu.vue';
           <section :class="SIDEBAR_FRAME">
             <SideBar />
           </section>
-          <section :class="SIDEBAR_CONTAINER_FRAME"></section>
+          <section :class="SIDEBAR_CONTAINER_FRAME">
+            <router-view />
+          </section>
           <section :class="BOTTOM_MENU_FRAME">
             <BottomMenu />
           </section>

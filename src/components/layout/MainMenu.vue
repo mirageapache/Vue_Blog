@@ -20,6 +20,8 @@ import { useUserStore } from '@/store/user';
 import { useRouter } from 'vue-router';
 import { checkLogin, scrollToTop } from '@/utils/common';
 import MenuItem from '@/components/layout/MenuItem.vue';
+import UserInfoPanel from '../user/UserInfoPanel.vue';
+import type { UserDataType } from '@/types/userType';
 
 library.add(faHome, faCompass, faPenNib, faPenToSquare, faSun, faMoon, faRightFromBracket, faXmark);
 
@@ -33,7 +35,7 @@ const emit = defineEmits<{
 const router = useRouter();
 const mainStore = useMainStore();
 const userStore = useUserStore();
-const userData = ref(userStore.userData);
+const userData = ref<UserDataType | null>(userStore.userData);
 const toggleMenuAnimation = ref(props.toggleMenuAnimation);
 
 /** 關閉選單 */
@@ -98,15 +100,15 @@ const handleLogout = () => {
           "
         >
           userInfo
-          <!-- <UserInfoPanel
-            userId={userData._id}
-            account={userData.account}
-            name={userData.name}
-            avatarUrl={userData.avatar}
-            bgColor={userData.bgColor}
+          <UserInfoPanel
+            :userId="userData!.userId"
+            :account="userData!.account"
+            :name="userData!.name"
+            :avatarUrl="userData!.avatar"
+            :bgColor="userData!.bgColor"
             class="my-2 py-2 px-3 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
             menuLink
-          /> -->
+          />
         </router-link>
       </div>
       <div class="h-full py-2 px-8 opacity-100">
