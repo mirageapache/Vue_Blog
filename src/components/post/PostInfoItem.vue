@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from 'vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import { isEmpty } from 'lodash';
 import { HINT_LABEL } from '@/constants/LayoutConstants';
+import { faHeart, faComment, faShare } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faHeart, faComment, faShare);
 
 const props = defineProps<{
-  iconName: string[]; // 透過props傳遞icon名稱的寫法
   count: number | undefined; // 選項數量
   tipText: string; // 提示內容
   tipClass: string; // 提示樣式
@@ -16,7 +18,7 @@ const emit = defineEmits<{
   (e: 'handleDelete', event: Event): void;
 }>();
 
-const { iconName, count, tipText, tipClass, faClass } = props;
+const { count, tipText, tipClass, faClass } = props;
 const showTip = ref(false);
 
 const handleDelete = (event: Event) => {
@@ -38,7 +40,7 @@ const handleDelete = (event: Event) => {
         :class="faClass"
         @click="(e) => handleDelete(e)"
       >
-        <font-awesome-icon :icon="iconName" class="w-5 h-5 m-1.5" />
+        <slot name="icon"></slot>
       </button>
       <p
         v-if="!isEmpty(count) || count !== undefined"
