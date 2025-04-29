@@ -23,7 +23,7 @@ const authStore = useAuthStore();
 const postStore = usePostStore();
 const userId = Cookies.get('uid'); // userId，判斷有沒有登入
 const activePage = ref(mainStore.activePage);
-const authToken = localStorage.getItem('authToken');
+const authToken = Cookies.get('authToken');
 </script>
 
 <template>

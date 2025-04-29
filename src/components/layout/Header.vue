@@ -104,7 +104,7 @@ onUnmounted(() => {
           v-if="checkLogin()"
           type="button"
           class="flex justify-center items-center mx-1.5"
-          @click="toggleMenuAnimation = 'translate-x-0'"
+          @click="setToggleMenuAnimation('translate-x-0')"
         >
           <FontAwesomeIcon
             :icon="['fas', 'bars']"

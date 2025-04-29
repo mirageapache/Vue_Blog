@@ -1,4 +1,5 @@
 /* eslint-disable no-plusplus */
+import Cookies from 'js-cookie';
 import { isEmpty } from 'lodash';
 import Swal from 'sweetalert2';
 
@@ -27,7 +28,7 @@ export const deleteCookie = (name: string) => {
  */
 export const checkLogin = () => {
   const id = getCookies('uid');
-  const token = localStorage.getItem('authToken');
+  const token = Cookies.get('authToken');
 
   if (!isEmpty(id) && !isEmpty(token)) {
     return true;

@@ -3,15 +3,21 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import moment from 'moment';
 import Swal from 'sweetalert2';
-
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { isEmpty } from 'lodash';
 import { usePostStore } from '@/store/post';
 import type { PostDataType } from '@/types/postType';
 import { formatDateTime } from '@/utils/dateTime';
 import { getCookies } from '@/utils/common';
 import { HINT_LABEL } from '@/constants/LayoutConstants';
+import { deletePost } from '@/api/post';
 import UserInfoPanel from '../user/UserInfoPanel.vue';
 import PostInfoItem from './PostInfoItem.vue';
+import PostInfoPanel from './PostInfoPanel.vue';
+
+library.add(faTrashCan);
 
 const props = defineProps<{
   postData: PostDataType;
@@ -28,7 +34,6 @@ const showEditTip = ref(false);
 const contentArr = postData.content.match(/<div.*?<\/div>/g); // 將字串內容轉換成陣列
   const contentLength = isEmpty(contentArr) ? 0 : contentArr!.length; // 貼文內容(段落數)
 const hiddenContent = ref(contentLength > 3 || content.length > 100 || false); // 是否隱藏貼文內容(段落數 > 3 或 字數 > 100)
-const iconName = ref(['fas', 'trash-can']);
 /** 點選貼文 */
 const handleClickPost = () => {
   postStore.setPostId(_id);
@@ -50,7 +55,20 @@ const handleDelete = (e: Event) => {
         cancelButtonText: `取消`,
       })
       .then((result) => {
-        // if (result.isConfirmed) deleteMutation.mutate();
+        if (result.isConfirmed) {
+          deletePost(_id, isCurrentUser).then((res) => {
+            if (res.status === 200) {
+              Swal.fire({
+                title: '已刪除貼文',
+                icon: 'info',
+                confirmButtonText: '確認',
+              })
+              .then(() => {
+                window.location.reload();
+              });
+            }
+          });
+        }
       });
     }
   };
@@ -103,13 +121,16 @@ const handleDelete = (e: Event) => {
           </div>
           <PostInfoItem
             v-if="isCurrentUser && path.includes('/profile')"
-            :iconName="iconName"
             tipText="刪除"
             :count="undefined"
             faClass="text-gray-400 dark:text-gray-100 hover:text-orange-500 dark:hover:text-orange-500"
             tipClass="w-12"
             :handle-delete="handleDelete"
-          />
+          >
+            <template #icon>
+              <font-awesome-icon :icon="['fas', 'trash-can']" class="w-5 h-5 m-1.5" />
+            </template>
+          </PostInfoItem>
         </div>
       </div>
       <div class="sm:ml-[60px] px-2">
@@ -140,7 +161,7 @@ const handleDelete = (e: Event) => {
         </div>
 
         <!-- info panel -->
-        <!-- <PostInfoPanel postData={postData} /> -->
+        <PostInfoPanel :postData="postData" />
       </div>
     </div>
   </div>

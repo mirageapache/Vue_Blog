@@ -7,7 +7,8 @@ import type { PostDataType } from '@/types/postType';
 
 const page = ref(1);
 // 指定reactive陣列的型別
-const postList = reactive<PostDataType[]>([]);
+const state = reactive({ postList: [] as PostDataType[] });
+const { postList } = state;
 const isLoading = ref(false);
 
 const fetchPosts = async () => {
