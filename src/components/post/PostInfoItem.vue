@@ -28,33 +28,30 @@ const handleDelete = (event: Event) => {
 </script>
 
 <template>
-  <div>
-    <span
-      class="relative flex justify-center items-center"
-      @mouseenter="() => showTip = true"
-      @mouseleave="() => showTip = false"
+  <div
+    class="relative flex justify-center items-center"
+    @mouseenter="() => showTip = true"
+    @mouseleave="() => showTip = false"
+  >
+    <button
+      type="button"
+      class="flex justify-center items-center"
+      :class="faClass"
+      @click="(e) => handleDelete(e)"
     >
-      <button
-        type="button"
-        class="flex justify-center items-center"
-        :class="faClass"
-        @click="(e) => handleDelete(e)"
-      >
-        <slot name="icon"></slot>
-      </button>
-      <p
-        v-if="!isEmpty(count) || count !== undefined"
-        class="text-md font-bold text-center text-gray-400 dark:text-gray-100"
-      >
-        {{ count }}
-      </p>
-      <span
-        class="top-[-25px] right-0"
-        :class="[tipClass, HINT_LABEL, showTip ? 'block' : 'hidden']"
-      >
-        {{ tipText }}
-      </span>
+      <slot name="icon"></slot>
+    </button>
+    <p
+      v-if="!isEmpty(count) || count !== undefined"
+      class="text-md font-bold text-center text-gray-400 dark:text-gray-100"
+    >
+      {{ count }}
+    </p>
+    <span
+      class="top-[-25px] right-0"
+      :class="[tipClass, HINT_LABEL, showTip ? 'block' : 'hidden']"
+    >
+      {{ tipText }}
     </span>
   </div>
-
 </template>

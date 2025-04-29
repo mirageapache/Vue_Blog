@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, ref } from 'vue';
+import { computed, defineEmits, defineProps, ref } from 'vue';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -36,7 +36,7 @@ const router = useRouter();
 const mainStore = useMainStore();
 const userStore = useUserStore();
 const userData = ref<UserDataType | null>(userStore.userData);
-const toggleMenuAnimation = ref(props.toggleMenuAnimation);
+const toggleMenuAnimation = computed(() => props.toggleMenuAnimation);
 
 /** 關閉選單 */
 const closeMenu = () => {
@@ -66,11 +66,8 @@ const handleLogout = () => {
     <button
       type="button"
       class="w-full h-full top-0 left-0 text-transparent"
-      :class="{
-        hidden: toggleMenuAnimation === 'translate-x-full',
-        fixed: toggleMenuAnimation !== 'translate-x-full'
-      }"
-      @click="closeMenu"
+      :class="[toggleMenuAnimation === 'translate-x-full' ? 'hidden' : 'fixed']"
+      @click="closeMenu()"
     />
     <!-- 選單內容 -->
     <div
@@ -79,7 +76,7 @@ const handleLogout = () => {
     >
       <div class="z-10 w-full flex justify-end py-2 px-4">
         <!-- 關閉選單 -->
-        <button aria-label="close" type="button" class="flex justify-center m-1" @click="closeMenu">
+        <button aria-label="close" type="button" class="flex justify-center m-1" @click="closeMenu()">
           <font-awesome-icon
             :icon="['fas', 'xmark']"
             class="h-7 w-7 m-1 text-gray-900 dark:text-gray-100"
@@ -99,7 +96,6 @@ const handleLogout = () => {
             }
           "
         >
-          userInfo
           <UserInfoPanel
             :userId="userData!.userId"
             :account="userData!.account"
@@ -188,7 +184,7 @@ const handleLogout = () => {
           aria-label="darkMode"
           type="button"
           class="w-14 h-7 flex items-center border border-gray-400 rounded-full px-2 bg-gray-150 dark:bg-gray-700"
-          @click="mainStore.setDarkMode()"
+          @click="() => mainStore.setDarkMode()"
         >
           <font-awesome-icon
             :icon="['fas', 'sun']"
@@ -200,7 +196,7 @@ const handleLogout = () => {
           />
         </button>
 
-        <button aria-label="logout" type="button" class="p-2" @click="handleLogout">
+        <button aria-label="logout" type="button" class="p-2" @click="handleLogout()">
           <font-awesome-icon
             :icon="['fas', 'right-from-bracket']"
             class="h-5 w-5 text-gray-700 dark:text-gray-300"

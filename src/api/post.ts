@@ -2,6 +2,9 @@ import axios from 'axios';
 import { API_URL, postLimit } from ".";
 import type { AxResponseType } from '@/types/apiType';
 import type { PostDataType } from '@/types/postType';
+import Cookies from 'js-cookie';
+
+const authToken = Cookies.get('authToken');
 
 /** postApi 型別 */
 interface PostApiType extends AxResponseType {
@@ -67,7 +70,7 @@ export async function getPostDetail(postId: string): Promise<PostApiType> {
 /** 新增貼文 */
 export async function createPost(userId: string, formData: FormData): Promise<PostApiType> {
   const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    headers: { Authorization: `Bearer ${authToken}` },
   };
   const result = await axios
     .post(`${API_URL}/post/create/${userId}`, formData, config)
@@ -84,7 +87,7 @@ export async function createPost(userId: string, formData: FormData): Promise<Po
 /** 編輯貼文 */
 export async function updatePost(userId: string, formData: FormData): Promise<PostApiType> {
   const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    headers: { Authorization: `Bearer ${authToken}` },
   };
   const result = await axios
     .patch(`${API_URL}/post/update/${userId}`, formData, config)
@@ -101,7 +104,7 @@ export async function updatePost(userId: string, formData: FormData): Promise<Po
 /** 刪除貼文 */
 export async function deletePost(postId: string, userId: string) {
   const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    headers: { Authorization: `Bearer ${authToken}` },
     data: { postId }, // 在 delete 請求中，必須在 config 裡加上 data
   };
   const result = await axios
@@ -119,7 +122,7 @@ export async function deletePost(postId: string, userId: string) {
 /** 喜歡/取消喜歡貼文 */
 export async function toggleLikePost(postId: string, userId: string, action: boolean) {
   const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    headers: { Authorization: `Bearer ${authToken}` },
   };
   const result = await axios
     .patch(`${API_URL}/post/toggleLikeAction/${userId}`, { postId, userId, action }, config)
