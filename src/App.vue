@@ -10,12 +10,16 @@ import SideBar from '@/components/layout/SideBar.vue';
 import BottomMenu from '@/components/layout/BottomMenu.vue';
 import SignInModal from '@/components/auth/SignInModal.vue';
 import SignUpModal from '@/components/auth/SignUpModal.vue';
-
+import PostCreateModal from '@/components/post/PostCreateModal.vue';
+import PostEditModal from '@/components/post/PostEditModal.vue';
 import { useAuthStore } from './store/auth';
 import { useMainStore } from './store';
+import { usePostStore } from './store/post';
+import FindPassword from './components/auth/FindPassword.vue';
 
 const authStore = useAuthStore();
 const mainStore = useMainStore();
+const postStore = usePostStore();
 const darkMode = computed(() => mainStore.darkMode);
 </script>
 
@@ -41,6 +45,9 @@ const darkMode = computed(() => mainStore.darkMode);
 
       <SignInModal v-if="authStore.showSignInPop" />
       <SignUpModal v-if="authStore.showSignUpPop" />
+      <FindPassword v-if="authStore.showForgetPwd" />
+      <PostCreateModal v-if="postStore.showCreateModal" />
+      <PostEditModal v-if="postStore.showEditModal" />
     </div>
   </div>
 </template>

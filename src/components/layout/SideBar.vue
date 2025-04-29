@@ -84,7 +84,7 @@ const userId = getCookies('uid');
       </SideBarItem>
       <SideBarItem v-if="checkLogin()" href="" text="建立貼文" :count="0" :active-item="false">
         <template #icon>
-          <font-awesome-icon icon="['fas', 'pen-to-square']" />
+          <font-awesome-icon :icon="['fas', 'pen-to-square']" />
         </template>
       </SideBarItem>
     </div>

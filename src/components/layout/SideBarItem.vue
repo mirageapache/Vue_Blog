@@ -58,7 +58,7 @@ const setShowTip = (value: boolean) => {
       @mouseleave="() => setShowTip(false)"
     >
       <div class="flex items-center">
-        <font-awesome-icon icon="['fas', 'pen-to-square']" />
+        <font-awesome-icon :icon="['fas', 'pen-to-square']" />
       </div>
       <span class="ml-3 font-bold hidden lg:block">建立貼文</span>
     </button>
