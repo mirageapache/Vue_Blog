@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PostDataType } from '@/types/postType';
 import PostItem from './PostItem.vue';
+import PostListLoading from './PostListLoading.vue';
 
 
 const props = defineProps<{

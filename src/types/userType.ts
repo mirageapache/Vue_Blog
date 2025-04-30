@@ -1,4 +1,4 @@
-import { RqResponseType } from './apiType';
+import type { RqResponseType } from './apiType';
 
 /** 使用者資料型別 */
 export interface UserDataType {
