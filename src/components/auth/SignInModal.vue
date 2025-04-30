@@ -94,7 +94,6 @@ const submitSignIn = async (role?: string) => {
             if (pathname === '/user/editProfile') {
               location.href = `${location.host}/user/profile/${res.data.userData.userId}`; // 導到userProfilePage
             }
-            // handleClose();
             window.location.reload();
           });
       } else if (handleStatus(get(res, 'status', 0)) === 4) {

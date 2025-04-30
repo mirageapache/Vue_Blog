@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { API_URL } from './index';
 import type { AxResponseType } from '../types/apiType';
-import type { UserDataType } from '../types/userType';
+import type { UserDataType, UserProfileType } from '../types/userType';
 
 const limit = 20
 
 interface GetUserProfileType extends AxResponseType {
-  data: UserDataType;
+  data: UserProfileType;
 }
 
 /** 動態取得使用者資料 型別 */
