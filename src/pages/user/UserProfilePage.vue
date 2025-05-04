@@ -15,27 +15,28 @@ import NoSearchResult from '@/components/tips/NoSearchResult.vue';
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 const userStateData = userStore.userData as UserDataType;
 
 const state = reactive({ userData: userStateData })
-const { userData } = state;
 const activeTab = ref('article');
 const activeStyle = ref('translate-x-0');
 const authToken = Cookies.get('authToken');
-const { userId } = useRoute().params;
+const userId = route.params.id;
 if (isEmpty(userId) || userId.length === 0) router.push('/notFound');
 const currentUserId = getCookies('uid');
 let identify = currentUserId === userId && !isEmpty(authToken); // 驗證身分使當前使用者
+
 
 /** 取得使用者資料 */
 const getUserProfile = async () => {
   const res = await getOwnProfile(userId! as string, authToken!);
   if (res.status === 200) {
-    Object.assign(userData, res.data);
+    Object.assign(state.userData, res.data);
   } else if (res.status === 401) {
     authStore.setSignInPop(true);
   } else {
-    Object.assign(userData, {_id: ''});
+    Object.assign(state.userData, {_id: ''});
   }
 }
 
@@ -68,7 +69,7 @@ const handleTabActive = (tabValue: string) => {
 </script>
 
 <template>
-  <template v-if="!isEmpty(userData._id)">
+  <template v-if="isEmpty(state.userData._id)">
     <NoSearchResult msgOne="使用者不存在" msgTwo="" type="user" />
   </template>
   <template v-else>
@@ -77,22 +78,22 @@ const handleTabActive = (tabValue: string) => {
         <div class="flex gap-4">
           <div>
             <Avatar
-              :name="userData.name"
-              :avatarUrl="userData.avatar"
+              :name="state.userData.name"
+              :avatarUrl="state.userData.avatar"
               :size="'w-[72px] h-[72px]'"
               :textSize="'text-4xl'"
-              :bgColor="userData.bgColor"
+              :bgColor="state.userData.bgColor"
             />
           </div>
           <div class="flex flex-col justify-center">
-            <p class="text-3xl font-semibold">{{ userData.name }}</p>
-            <p class="text-gray-500">@{{ userData.account }}</p>
+            <p class="text-3xl font-semibold">{{ state.userData.name }}</p>
+            <p class="text-gray-500">@{{ state.userData.account }}</p>
           </div>
         </div>
         <!-- 追蹤狀態 -->
         <FollowBtn
           v-if="!identify && checkLogin()"
-          :user="userData"
+          :user="state.userData"
           :currentUser="currentUserId!"
           :refetch="getUserProfile"
         />
@@ -107,8 +108,8 @@ const handleTabActive = (tabValue: string) => {
           </Link>
         </div>
       </div>
-      <div v-if="!isEmpty(userData.bio)" class="bg-gray-100 dark:bg-gray-700 rounded-md p-2">
-        <p>{{ userData.bio }}</p>
+      <div v-if="!isEmpty(state.userData.bio)" class="bg-gray-100 dark:bg-gray-700 rounded-md p-2">
+        <p>{{ state.userData.bio }}</p>
       </div>
       <div>
         <!-- 頁籤 -->
