@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { get, isEmpty } from 'lodash';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -16,6 +16,7 @@ import { useRouter } from 'vue-router';
 import { errorAlert, handleStatus } from '@/utils/fetch';
 import type { UserProfileType } from '@/types/userType';
 import { useUserStore } from '@/store/user';
+import FormTextarea from '@/components/form/FormTextarea.vue';
 
 library.add(faInfoCircle);
 
@@ -139,6 +140,10 @@ const submitEditProfile = async () => {
   }
   isLoading.value = false;
 };
+
+onMounted(() => {
+  getProflieData();
+});
 </script>
 
 <template>
@@ -291,14 +296,22 @@ const submitEditProfile = async () => {
 
             <div class="mt-10">
               <label htmlFor="bio" class="font-bold"> 自我介紹 </label>
-              <FormTextArea
-                name="{name}"
+              <FormTextarea
+                :name="formState.name"
                 placeholder="來說說你的故事吧！"
-                value="{bio}"
-                setValue="{setBio}"
-                errorMsg="{bioError}"
-                setErrorMsg="{setBioError}"
-                disabled="{isVisitor}"
+                :value="formState.bio"
+                @set-value="
+                  (val) => {
+                    formState.bio = val;
+                  }
+                "
+                :errorMsg="errorState.bioError"
+                @set-error-msg="
+                  (val) => {
+                    errorState.bioError = val;
+                  }
+                "
+                :disabled="isVisitor"
               />
             </div>
           </div>
