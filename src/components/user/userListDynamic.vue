@@ -3,14 +3,24 @@ import type { UserDataType } from '@/types/userType';
 import UserInfoPanel from './UserInfoPanel.vue';
 import UserListLoading from './UserListLoading.vue';
 import UserLoading from '@/components/user/UserLoading.vue';
+import FollowingItem from './FollowingItem.vue';
 
 const props = defineProps<{
   userListData: UserDataType[];
   isLoading: boolean;
   atBottom: boolean;
+  type: string;
 }>();
 
-const { userListData, isLoading, atBottom } = props;
+const { userListData, isLoading, atBottom, type } = props;
+
+const emit = defineEmits<{
+  (e: 'refetch'): void;
+}>();
+
+const refetch = () => {
+  emit('refetch');
+};
 
 </script>
 
@@ -19,7 +29,7 @@ const { userListData, isLoading, atBottom } = props;
     <UserListLoading />
   </template>
   <section class="w-full">
-    <div>
+    <div v-if="type === 'followed'">
       <UserInfoPanel
         v-for="user in userListData"
         :key="user._id"
@@ -29,6 +39,14 @@ const { userListData, isLoading, atBottom } = props;
         :avatarUrl="user.avatar"
         :bgColor="user.bgColor"
         className="my-2"
+      />
+    </div>
+    <div v-if="type === 'userList'">
+      <FollowingItem
+        v-for="user in userListData"
+        :key="user._id"
+        :user="user"
+        @refetch="refetch"
       />
     </div>
     <div v-if="atBottom" class="my-5 text-center text-gray-500">- 已經沒有更多資料了 -</div>

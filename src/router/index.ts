@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/pages/HomePage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue';
+import UserProfilePage from '@/pages/user/UserProfilePage.vue';
+import EditProfilePage from '@/pages/user/EditProfilePage.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -35,16 +37,16 @@ const router = createRouter({
     //   name: 'postCreate',
     //   component: PostCreatePage
     // },
-    // {
-    //   path: '/user/profile/:id',
-    //   name: 'userProfile',
-    //   component: UserProfilePage
-    // },
-    // {
-    //   path: '/user/profile/edit/:id',
-    //   name: 'userProfileEdit',
-    //   component: UserProfileEditPage
-    // },
+    {
+      path: '/user/profile/:id',
+      name: 'userProfile',
+      component: UserProfilePage
+    },
+    {
+      path: '/user/profile/edit/:id',
+      name: 'userProfileEdit',
+      component: EditProfilePage
+    },
     // {
     //   path: '/resetPassword',
     //   name: 'resetPassword',

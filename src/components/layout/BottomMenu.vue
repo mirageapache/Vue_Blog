@@ -95,7 +95,7 @@ const authToken = Cookies.get('authToken');
     </button>
     <router-link
       v-else
-      to="/user/profile/{{ userId }}"
+      :to="`/user/profile/${userId}`"
       class="w-1/3 flex justify-center py-3 cursor-pointer"
       @click="
         () => {
