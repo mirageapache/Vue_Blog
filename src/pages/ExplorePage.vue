@@ -3,8 +3,8 @@ import { useMainStore } from '@/store';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSearch, faXmark, faFileLines, faNoteSticky, faUsers, faTag } from '@fortawesome/free-solid-svg-icons';
-import { get, isEmpty } from 'lodash';
-import { onMounted, onUpdated, ref } from 'vue';
+import { get, isEmpty, debounce } from 'lodash';
+import { onMounted, onUpdated, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getSearchCount } from '@/api';
 import { checkLogin } from '@/utils/common';
@@ -56,6 +56,21 @@ const getSearchAmount = async (searchString: string) => {
   hashtag.value = get(res, 'hashtag', 0);
 }
 
+// 使用防抖處理搜尋
+const debouncedSearch = debounce((value: string) => {
+  getSearchAmount(value);
+  if (isEmpty(value)) {
+    router.push('/explore');
+  } else {
+    router.push(`/explore?search=${value}`);
+  }
+}, 300);
+
+// 監聽 searchString 的變化
+watch(searchString, (newValue) => {
+  debouncedSearch(newValue);
+});
+
 onMounted(() => {
   getSearchAmount(searchString.value);
 });
@@ -93,16 +108,6 @@ onUpdated(() => {
           v-model="searchString"
           autoComplete="off"
           class="p-4 pl-10 w-full h-9 text-lg rounded-full bg-gray-200 dark:bg-gray-700 outline-none"
-          @input="(e) => {
-            const target = e.target as HTMLInputElement;
-            console.log(searchString);
-            getSearchAmount(target.value);
-            if (isEmpty(target.value)) {
-              router.push('/explore');
-            } else {
-              router.push(`/explore?search=${target.value}`);
-            }
-          }"
         />
         <font-awesome-icon
           :icon="['fas', 'search']"
