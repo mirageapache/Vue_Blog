@@ -20,8 +20,10 @@ const fetchUsers = async () => {
   try {
     const res = await getSearchUserList(nextPage.value, searchString as string, currentUser);
     
+    console.log(res);
+
     if (res) {
-      userList.value.push(...res.data);
+      userList.value.push(...res.userList);
       nextPage.value = res.nextPage;
     }
   } finally {
@@ -50,11 +52,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <template v-if="isEmpty(userList)">
-    <NoSearchResult msgOne="搜尋不到相關文章" msgTwo="" type="article" />
-  </template>
-  <template v-else-if="isLoading">
+  <template v-if="isLoading">
     <UserListLoading />
+  </template>
+  <template v-else-if="isEmpty(userList)">
+    <NoSearchResult msgOne="搜尋不到相關用戶" msgTwo="" type="user" />
   </template>
   <template v-else>
     <UserListDynamic
