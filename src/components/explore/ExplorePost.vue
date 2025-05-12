@@ -24,7 +24,7 @@ const fetchPosts = async () => {
     }
 
     if (res) {
-      postList.value.push(...res.data);
+      postList.value.push(...res.posts);
       nextPage.value = res.nextPage;
     }
   } finally {
@@ -53,11 +53,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <template v-if="isEmpty(postList)">
-    <NoSearchResult msgOne="搜尋不到相關文章" msgTwo="" type="article" />
-  </template>
-  <template v-else-if="isLoading">
+  <template v-if="isLoading">
     <PostListLoading />
+  </template>
+  <template v-else-if="isEmpty(postList)">
+    <NoSearchResult msgOne="搜尋不到相關貼文" msgTwo="" type="post" />
   </template>
   <template v-else>
     <PostListDynamic
