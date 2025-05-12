@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -19,6 +19,11 @@ import UserInfoPanel from '@/components/user/UserInfoPanel.vue';
 import CommentList from '@/components/comment/CommentList.vue';
 import { errorAlert } from '@/utils/fetch';
 import { createComment } from '@/api/comment';
+// 引入Tiptap相關套件
+import { Editor, EditorContent } from '@tiptap/vue-3';
+import StarterKit from '@tiptap/starter-kit';
+// 引入工具列組件
+import TiptapToolbar from '@/components/editor/TiptapToolbar.vue';
 
 library.add(faCircleLeft);
 
@@ -29,11 +34,32 @@ const id = useRoute().params.id as string; // article id
 const isLoading = ref(false);
 const articleData = ref<ArticleDataType>();
 const title = ref('');
-const editMode = mainStore.editMode;
+const editMode = computed(() => mainStore.editMode);
 const commentContent = ref('');
 const showPlaceholder = ref(true);
 const commentInput = ref<HTMLDivElement | null>(null);
 const commentList = ref<CommentDataType[]>([]);
+
+// Tiptap編輯器 - 使用any類型避免類型錯誤
+const editor = ref<any>(null);
+
+onMounted(() => {
+  getArticleData();
+
+  // 初始化Tiptap編輯器
+  editor.value = new Editor({
+    extensions: [StarterKit],
+    content: '<p>開始編輯您的文章...</p>',
+    editable: editMode.value
+  });
+});
+
+// 監聽編輯模式變更
+watch(editMode, (newValue) => {
+  if (editor.value) {
+    editor.value.setEditable(newValue);
+  }
+});
 
 /** 取得文章資料 */
 const getArticleData = async () => {
@@ -42,6 +68,11 @@ const getArticleData = async () => {
   if (res) {
     articleData.value = res.data;
     title.value = articleData.value.title;
+
+    // 更新編輯器內容
+    if (editor.value && articleData.value.content) {
+      editor.value.commands.setContent(articleData.value.content);
+    }
   }
   isLoading.value = false;
 };
@@ -86,26 +117,23 @@ const submitComment = async () => {
 const handleSubmit = async () => {
   console.log('handle submit');
 
-  // const contentState = editorState.getCurrentContent();
-  // const rawContent = convertToRaw(contentState);
-  // const contentString = JSON.stringify(rawContent);
-  
-  // try {
-  //   const res = await updateArticle(id, userId!, title.value, contentString);
-  //   if (res.status === 200) {
-  //     mainStore.setEditMode(false);
-  //     getArticleData();
-  //   } else {
-  //     errorAlert();
-  //   }
-  // } catch (error) {
-  //   errorAlert();
-  // }
-};
+  if (!editor.value) return;
 
-onMounted(() => {
-  getArticleData();
-});
+  // 獲取編輯器HTML內容
+  const contentString = editor.value.getHTML();
+
+  try {
+    const res = await updateArticle(id, userId!, title.value, contentString);
+    if (res.status === 200) {
+      mainStore.setEditMode(false);
+      getArticleData();
+    } else {
+      errorAlert();
+    }
+  } catch (error) {
+    errorAlert();
+  }
+};
 </script>
 
 <template>
@@ -130,7 +158,7 @@ onMounted(() => {
             @click="
               () => {
                 if (editMode) mainStore.setEditMode(false);
-                else handleBackward;
+                else handleBackward();
               }
             "
           >
@@ -161,11 +189,8 @@ onMounted(() => {
         </div>
         <div class="flex flex-col w-full">
           <span v-if="editMode">
-            <EditorToolBar
-              toggleInlineStyle="{toggleInlineStyle}"
-              toggleBlockType="{toggleBlockType}"
-              handleFileInput="{handleFileInput}"
-            />
+            <!-- Tiptap工具列 -->
+            <TiptapToolbar v-if="editor" :editor="editor" />
             <div class="mb-2">
               <input
                 type="text"
@@ -178,26 +203,24 @@ onMounted(() => {
           </span>
           <h2 v-else class="text-4xl my-4">{{ title }}</h2>
 
-          <!-- 文章內文 -->
+          <!-- 文章內文 - 使用Tiptap編輯器 -->
           <div
             class="relative p-0.5"
             :class="[editMode ? 'max-h-minus325 h-minus325 overflow-y-auto' : '']"
           >
-            <!-- <Editor
-              editorState="{editorState}"
-              readOnly="{!editMode}"
-              onChange="{setEditorState}"
-              customStyleMap="{customStyleMap}"
-              ref="{editorRef}"
-              blockRendererFn="{blockRendererFn}"
-            /> -->
+            <!-- Tiptap編輯器 -->
+            <EditorContent
+              v-if="editor"
+              :editor="editor"
+              class="prose dark:prose-invert max-w-none"
+            />
           </div>
         </div>
         <!-- comments Section -->
         <div v-if="!editMode" class="relative mt-3 border-t-[1px]">
           <div class="flex justify-between my-3">
             <div
-              ref="{commentInput}"
+              ref="commentInput"
               contentEditable="true"
               aria-placeholder="留言"
               class="w-full mr-2 py-1.5 px-2 rounded-md outline-none bg-gray-100 dark:bg-gray-800"
@@ -231,7 +254,7 @@ onMounted(() => {
           </div>
 
           <!-- 留言串 -->
-          <CommentList :commentListData="commentList" />
+          <CommentList v-if="articleData && articleData.comments" :commentListData="commentList" />
         </div>
       </div>
     </div>

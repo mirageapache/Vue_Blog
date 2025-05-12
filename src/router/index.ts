@@ -5,6 +5,7 @@ import UserProfilePage from '@/pages/user/UserProfilePage.vue';
 import EditProfilePage from '@/pages/user/EditProfilePage.vue';
 import ExplorePage from '@/pages/ExplorePage.vue';
 import PostDetailPage from '@/pages/post/PostDetailPage.vue';
+import ArticleDetailPage from '@/pages/article/ArticleDetailPage.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -19,11 +20,11 @@ const router = createRouter({
       name: 'explore',
       component: ExplorePage
     },
-    // {
-    //   path: '/article/:id',
-    //   name: 'article',
-    //   component: ArticlesPage
-    // },
+    {
+      path: '/article/:id',
+      name: 'article',
+      component: ArticleDetailPage
+    },
     // {
     //   path: '/article/create',
     //   name: 'articleCreate',
