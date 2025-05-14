@@ -23,7 +23,7 @@ export const getPartialPosts = async (page: number) => {
   let result = null;
   if (page > 0) {
     result = await axios
-      .post(`${API_URL}/post/partial`, { page, postLimit })
+      .post(`${API_URL}/post/partial`, { page, limit: postLimit })
       .then((res) => {
         return res.data;
       })
