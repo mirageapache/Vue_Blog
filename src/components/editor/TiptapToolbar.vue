@@ -29,9 +29,11 @@ library.add(
   faRedo
 );
 
-defineProps<{
+const props = defineProps<{
   editor: any;
 }>();
+
+const { editor } = props;
 </script>
 
 <template>

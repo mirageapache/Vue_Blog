@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue';
+import { ref } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { isEmpty } from 'lodash';
 import { HINT_LABEL } from '@/constants/LayoutConstants';
