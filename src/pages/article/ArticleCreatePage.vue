@@ -1,22 +1,27 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { get, isEmpty } from 'lodash';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faCircleLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
 // 引入Tiptap相關套件
 import { Editor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
+import Color from '@tiptap/extension-color';
+import TextStyle from '@tiptap/extension-text-style';
+import Highlight from '@tiptap/extension-highlight';
 import TiptapToolbar from '@/components/editor/TiptapToolbar.vue';
+import '@/tiptap.css';
 import { createArticle } from '@/api/article';
 import { ERR_NETWORK_MSG } from '@/constants/StringConstants';
 import { getCookies } from '@/utils/common';
 import { errorAlert, handleStatus } from '@/utils/fetch';
 
-library.add(faCircleLeft);
+library.add(faCircleLeft, faSpinner);
+
 const userId = getCookies('uid');
 const isLoading = ref(false);
 const title = ref('');
@@ -32,7 +37,10 @@ onMounted(() => {
       Placeholder.configure({
         placeholder: '開始編輯您的文章...',
         emptyEditorClass: 'is-editor-empty'
-      })
+      }),
+      TextStyle,
+      Color,
+      Highlight.configure({ multicolor: true })
     ],
     content: '',
     editable: true,
@@ -100,7 +108,7 @@ const handleSubmit = async () => {
           v-if="!isEmpty(title)"
           type="button"
           class="flex justify-center items-center w-16 sm:w-20 h-9 p-2 sm:py-1.5 text-white rounded-md bg-green-600"
-          @click="{ handleSubmit }"
+          @click="handleSubmit"
         >
           <p v-if="isLoading">
             <FontAwesomeIcon :icon="['fas', 'spinner']" class="animate-spin h-5 w-5 m-1.5" />
@@ -137,13 +145,3 @@ const handleSubmit = async () => {
     </div>
   </div>
 </template>
-
-<style>
-.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  color: #adb5bd;
-  pointer-events: none;
-  height: 0;
-}
-</style>

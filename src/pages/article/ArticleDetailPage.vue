@@ -20,7 +20,7 @@ import CommentList from '@/components/comment/CommentList.vue';
 import { errorAlert } from '@/utils/fetch';
 import { createComment } from '@/api/comment';
 // 引入Tiptap相關套件
-import { Editor, EditorContent, useEditor } from '@tiptap/vue-3';
+import { Editor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 // 引入工具列組件
 import TiptapToolbar from '@/components/editor/TiptapToolbar.vue';
