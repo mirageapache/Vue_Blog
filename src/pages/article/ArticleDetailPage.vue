@@ -66,6 +66,7 @@ const getArticleData = async () => {
   isLoading.value = true;
   const res = await getArticleDetail(id);
   if (res) {
+    console.log(res.data);
     articleData.value = res.data;
     title.value = articleData.value.title;
 
