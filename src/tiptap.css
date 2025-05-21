@@ -24,7 +24,7 @@
 
 /* 引用區塊樣式 */
 .ProseMirror blockquote {
-  border-left: 3px solid #e5e7eb;
+  border-left: 4px solid #f8a01b;
   padding-left: 1em;
   margin: 1em 0;
   color: #6b7280;
