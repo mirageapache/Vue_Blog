@@ -22,8 +22,12 @@ import { createComment } from '@/api/comment';
 // 引入Tiptap相關套件
 import { Editor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
-// 引入工具列組件
+import Placeholder from '@tiptap/extension-placeholder';
+import Color from '@tiptap/extension-color';
+import TextStyle from '@tiptap/extension-text-style';
+import Highlight from '@tiptap/extension-highlight';
 import TiptapToolbar from '@/components/editor/TiptapToolbar.vue';
+import '@/tiptap.css';
 
 library.add(faCircleLeft);
 
@@ -34,23 +38,38 @@ const id = useRoute().params.id as string; // article id
 const isLoading = ref(false);
 const articleData = ref<ArticleDataType>();
 const title = ref('');
+const content = ref('');
+const editor = ref<any>(null);
+const isEditorReady = ref(false);
 const editMode = computed(() => mainStore.editMode);
 const commentContent = ref('');
 const showPlaceholder = ref(true);
 const commentInput = ref<HTMLDivElement | null>(null);
 const commentList = ref<CommentDataType[]>([]);
 
-// Tiptap編輯器 - 使用any類型避免類型錯誤
-const editor = ref<any>(null);
-
 onMounted(() => {
   getArticleData();
 
   // 初始化Tiptap編輯器
   editor.value = new Editor({
-    extensions: [StarterKit],
-    content: '<p>開始編輯您的文章...</p>',
-    editable: editMode.value
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: '開始編輯您的文章...',
+        emptyEditorClass: 'is-editor-empty'
+      }),
+      TextStyle,
+      Color,
+      Highlight.configure({ multicolor: true })
+    ],
+    content: '',
+    editable: editMode.value,
+    onUpdate: ({ editor }) => {
+      content.value = editor.getHTML();
+    },
+    onTransaction: () => {
+      isEditorReady.value = true;
+    }
   });
 });
 
@@ -66,7 +85,6 @@ const getArticleData = async () => {
   isLoading.value = true;
   const res = await getArticleDetail(id);
   if (res) {
-    console.log(res.data);
     articleData.value = res.data;
     title.value = articleData.value.title;
 
@@ -116,9 +134,13 @@ const submitComment = async () => {
 
 /** 修改文章 */
 const handleSubmit = async () => {
-  console.log('handle submit');
-
-  if (!editor.value) return;
+  if (!title.value) {
+    errorAlert('請輸入文章標題');
+    return;
+  } else if (!editor.value?.getHTML()) {
+    errorAlert('請輸入文章內容');
+    return;
+  }
 
   // 獲取編輯器HTML內容
   const contentString = editor.value.getHTML();
@@ -191,7 +213,7 @@ const handleSubmit = async () => {
         <div class="flex flex-col w-full">
           <span v-if="editMode">
             <!-- Tiptap工具列 -->
-            <TiptapToolbar v-if="editor" :editor="editor" />
+            <TiptapToolbar v-if="isEditorReady" :editor="editor" />
             <div class="mb-2">
               <input
                 type="text"
@@ -213,7 +235,7 @@ const handleSubmit = async () => {
             <EditorContent
               v-if="editor"
               :editor="editor"
-              class="prose dark:prose-invert max-w-none"
+              class="prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none"
             />
           </div>
         </div>

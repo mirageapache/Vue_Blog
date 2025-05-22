@@ -128,7 +128,7 @@ const handleDelete = async (e: Event) => {
         @handle-click="handleLikeArticle"
       >
         <template #icon>
-          <font-awesome-icon :icon="['fas', 'heart']" />
+          <font-awesome-icon :icon="['fas', 'heart']" class="w-5 h-5 m-1.5"/>
         </template>
       </ArticleInfoItem>
 
@@ -141,7 +141,7 @@ const handleDelete = async (e: Event) => {
         @handle-click="handleLikeArticle"
       >
         <template #icon>
-          <font-awesome-icon :icon="['far', 'heart']" />
+          <font-awesome-icon :icon="['far', 'heart']" class="w-5 h-5 m-1.5"/>
         </template>
       </ArticleInfoItem>
 
@@ -159,7 +159,7 @@ const handleDelete = async (e: Event) => {
         "
       >
         <template #icon>
-          <font-awesome-icon :icon="['fas', 'comment']" />
+          <font-awesome-icon :icon="['fas', 'comment']" class="w-5 h-5 m-1.5"/>
         </template>
       </ArticleInfoItem>
 
@@ -173,7 +173,7 @@ const handleDelete = async (e: Event) => {
         @handle-click="handleClickEdit"
       >
         <template #icon>
-          <font-awesome-icon :icon="['fas', 'square-pen']" />
+          <font-awesome-icon :icon="['fas', 'square-pen']" class="w-5 h-5 m-1.5"/>
         </template>
       </ArticleInfoItem>
       <ArticleInfoItem
@@ -185,7 +185,7 @@ const handleDelete = async (e: Event) => {
         @handle-click="handleDelete"
       >
         <template #icon>
-          <font-awesome-icon :icon="['fas', 'trash-can']" />
+          <font-awesome-icon :icon="['fas', 'trash-can']" class="w-5 h-5 m-1.5"/>
         </template>
       </ArticleInfoItem>
     </div>
