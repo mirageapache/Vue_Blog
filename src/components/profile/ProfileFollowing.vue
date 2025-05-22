@@ -1,26 +1,28 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
 import { isEmpty } from 'lodash';
-import { getSearchUserList } from '@/api/user';
-import { getCookies } from '@/utils/common';
-import type { UserDataType } from '@/types/userType';
 import NoSearchResult from '../tips/NoSearchResult.vue';
 import UserListDynamic from '../user/userListDynamic.vue';
+import type { UserDataType } from '@/types/userType';
+import { getFollowingList } from '@/api/follow';
 
-const nextPage = ref(1);
+const props = defineProps<{
+  userId: string;
+  identify: boolean;
+}>();
+
+const { userId, identify } = props;
 const isLoading = ref(false);
-const userList = ref<UserDataType[]>([]);
-const searchString = useRoute().query.searchString;
-const currentUser = getCookies('uid');
+const followingList = ref<UserDataType[]>([]);
+const nextPage = ref(1);
 
-const fetchUsers = async () => {
+const fetchFollowingUser = async () => {
   if (isLoading.value) return;
   isLoading.value = true;
   try {
-    const res = await getSearchUserList(nextPage.value, searchString as string, currentUser);
+    const res = await getFollowingList(userId, nextPage.value);
     if (res) {
-      userList.value.push(...res.userList);
+      followingList.value.push(...res.followList);
       nextPage.value = res.nextPage;
     }
   } finally {
@@ -34,12 +36,12 @@ const handleScroll = () => {
     window.innerHeight + document.documentElement.scrollTop >=
     document.documentElement.offsetHeight - 350
   ) {
-    if (nextPage.value > 0) fetchUsers();
+    if (nextPage.value > 0) fetchFollowingUser();
   }
 };
 
 onMounted(() => {
-  fetchUsers();
+  fetchFollowingUser();
   window.addEventListener('scroll', handleScroll);
 });
 
@@ -49,15 +51,26 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <template v-if="isEmpty(userList) && !isLoading">
-    <NoSearchResult msgOne="搜尋不到相關用戶" msgTwo="" type="user" />
+  <template v-if="isEmpty(followingList) && !isLoading">
+    <NoSearchResult
+      v-if="identify"
+      msgOne="你還沒有追蹤任何人喔"
+      msgTwo="快去尋找有趣的人吧"
+      type="user"
+    />
+    <NoSearchResult
+      v-else
+      msgOne="沒有追蹤任何人"
+      msgTwo=""
+      type="user"
+    />
   </template>
   <template v-else>
     <UserListDynamic
-      :userListData="userList"
+      :userListData="followingList"
       :isLoading="isLoading"
       :atBottom="nextPage < 0"
-      @refetch="fetchUsers"
+      :refetch="fetchFollowingUser"
       type="userList"
     />
   </template>

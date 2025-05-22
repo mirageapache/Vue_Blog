@@ -1,27 +1,27 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
 import { isEmpty } from 'lodash';
-import NoSearchResult from '../tips/NoSearchResult.vue';
-import { getPartialArticles, getSearchArticle } from '@/api/article';
 import type { ArticleDataType } from '@/types/articleType';
 import ArticleListDynamic from '../article/ArticleListDynamic.vue';
+import NoSearchResult from '../tips/NoSearchResult.vue';
+import { getSearchArticle } from '@/api/article';
 
-const nextPage = ref(1);
+const props = defineProps<{
+  userId: string;
+  identify: boolean;
+}>();
+
+
+const { userId, identify } = props;
 const isLoading = ref(false);
 const articleList = ref<ArticleDataType[]>([]);
-const searchString = useRoute().query.searchString;
+const nextPage = ref(1);
 
 const fetchArticles = async () => {
   if (isLoading.value) return;
   isLoading.value = true;
-  let res = null;
   try {
-    if (searchString) {
-      res = await getSearchArticle(searchString as string, '', nextPage.value);
-    } else {
-      res = await getPartialArticles(nextPage.value);
-    }
+    const res = await getSearchArticle('', userId, nextPage.value);
 
     if (res) {
       articleList.value.push(...res.articles);
@@ -54,7 +54,18 @@ onUnmounted(() => {
 
 <template>
   <template v-if="isEmpty(articleList) && !isLoading">
-    <NoSearchResult msgOne="搜尋不到相關文章" msgTwo="" type="article" />
+    <NoSearchResult
+      v-if="identify"
+      msgOne="你還沒發佈任何文章"
+      msgTwo="試試建立文章的功能"
+      type="createArticle"
+    />
+    <NoSearchResult
+      v-else
+      msgOne="尚未發佈任何文章"
+      msgTwo=""
+      type="article"
+    />
   </template>
   <template v-else>
     <ArticleListDynamic

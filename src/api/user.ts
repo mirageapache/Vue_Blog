@@ -3,7 +3,7 @@ import { API_URL } from './index';
 import type { AxResponseType } from '../types/apiType';
 import type { UserDataType, UserProfileType } from '../types/userType';
 
-const limit = 20
+const limit = 20;
 
 interface GetUserProfileType extends AxResponseType {
   data: UserProfileType;

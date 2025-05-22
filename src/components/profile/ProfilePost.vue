@@ -1,27 +1,27 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
 import { isEmpty } from 'lodash';
 import type { PostDataType } from '@/types/postType';
-import { getPartialPosts, getSearchPost } from '@/api/post';
+import { getSearchPost } from '@/api/post';
 import NoSearchResult from '../tips/NoSearchResult.vue';
 import PostListDynamic from '../post/PostListDynamic.vue';
+import PostListLoading from '../post/PostListLoading.vue';
 
+const props = defineProps<{
+  userId: string;
+  identify: boolean;
+}>();
+
+const { userId, identify } = props;
 const nextPage = ref(1);
 const isLoading = ref(false);
 const postList = ref<PostDataType[]>([]);
-const searchString = useRoute().query.searchString;
 
 const fetchPosts = async () => {
   if (isLoading.value) return;
   isLoading.value = true;
-  let res = null;
   try {
-    if (searchString) {
-      res = await getSearchPost(searchString as string, '', nextPage.value);
-    } else {
-      res = await getPartialPosts(nextPage.value);
-    }
+    const res = await getSearchPost('', userId, nextPage.value);
 
     if (res) {
       postList.value.push(...res.posts);
@@ -54,7 +54,8 @@ onUnmounted(() => {
 
 <template>
   <template v-if="isEmpty(postList) && !isLoading">
-    <NoSearchResult msgOne="搜尋不到相關貼文" msgTwo="" type="post" />
+    <NoSearchResult v-if="identify" msgOne="你還沒發佈任何貼文" msgTwo="快發佈你的貼文動態" type="createPost" />
+    <NoSearchResult v-else msgOne="尚未發佈任何貼文" msgTwo=" " type="post" />;
   </template>
   <template v-else>
     <PostListDynamic

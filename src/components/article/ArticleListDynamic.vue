@@ -2,20 +2,27 @@
 import type { ArticleDataType } from '@/types/articleType';
 import ArticleItem from './ArticleItem.vue';
 import ArticleListLoading from './ArticleListLoading.vue';
-
+import { ref, watch } from 'vue';
+import ArticleLoading from './ArticleLoading.vue';
 
 const props = defineProps<{
   articleListData: ArticleDataType[];
   isLoading: boolean;
   atBottom: boolean;
 }>();
+const localAtBottom = ref(props.atBottom);
 
-const { articleListData, isLoading, atBottom } = props;
+watch(() => props.atBottom,
+  (newValue) => {
+    localAtBottom.value = newValue;
+  },
+  { immediate: true }
+);
 
 </script>
 
 <template>
-  <template v-if="isLoading">
+  <template v-if="articleListData.length === 0 && isLoading">
     <ArticleListLoading />
   </template>
   <template v-else>
@@ -27,7 +34,7 @@ const { articleListData, isLoading, atBottom } = props;
         - 已經沒有更多文章了 -
       </div>
       <div v-else>
-        <ArticleListLoading :withBorder="false" />
+        <ArticleLoading :withBorder="false" />
       </div>
     </section>
   </template>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL, postLimit } from ".";
+import { API_URL, limit } from '.';
 import type { AxResponseType } from '@/types/apiType';
 import type { PostDataType } from '@/types/postType';
 import Cookies from 'js-cookie';
@@ -23,7 +23,7 @@ export const getPartialPosts = async (page: number) => {
   let result = null;
   if (page > 0) {
     result = await axios
-      .post(`${API_URL}/post/partial`, { page, limit: postLimit })
+      .post(`${API_URL}/post/partial`, { page, limit })
       .then((res) => {
         return res.data;
       })
@@ -32,7 +32,7 @@ export const getPartialPosts = async (page: number) => {
       });
   }
   return result;
-}
+};
 
 /** 取得搜尋貼文 or 特定使用者的貼文 */
 export async function getSearchPost(
@@ -43,7 +43,7 @@ export async function getSearchPost(
   let result = null;
   if (page && page > 0) {
     result = await axios
-      .post(`${API_URL}/post/search`, { searchString, authorId, page, postLimit })
+      .post(`${API_URL}/post/search`, { searchString, authorId, page, limit })
       .then((res) => {
         return res.data;
       })
@@ -70,7 +70,7 @@ export async function getPostDetail(postId: string): Promise<PostApiType> {
 /** 新增貼文 */
 export async function createPost(userId: string, formData: FormData): Promise<PostApiType> {
   const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
+    headers: { Authorization: `Bearer ${authToken}` }
   };
   const result = await axios
     .post(`${API_URL}/post/create/${userId}`, formData, config)
@@ -87,7 +87,7 @@ export async function createPost(userId: string, formData: FormData): Promise<Po
 /** 編輯貼文 */
 export async function updatePost(userId: string, formData: FormData): Promise<PostApiType> {
   const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
+    headers: { Authorization: `Bearer ${authToken}` }
   };
   const result = await axios
     .patch(`${API_URL}/post/update/${userId}`, formData, config)
@@ -105,7 +105,7 @@ export async function updatePost(userId: string, formData: FormData): Promise<Po
 export async function deletePost(postId: string, userId: string) {
   const config = {
     headers: { Authorization: `Bearer ${authToken}` },
-    data: { postId }, // 在 delete 請求中，必須在 config 裡加上 data
+    data: { postId } // 在 delete 請求中，必須在 config 裡加上 data
   };
   const result = await axios
     .delete(`${API_URL}/post/delete/${userId}`, config)
@@ -122,7 +122,7 @@ export async function deletePost(postId: string, userId: string) {
 /** 喜歡/取消喜歡貼文 */
 export async function toggleLikePost(postId: string, userId: string, action: boolean) {
   const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
+    headers: { Authorization: `Bearer ${authToken}` }
   };
   const result = await axios
     .patch(`${API_URL}/post/toggleLikeAction/${userId}`, { postId, userId, action }, config)
@@ -142,7 +142,7 @@ export async function getSearchHashTag(
 ): Promise<PostPageListType> {
   const searchString = searchText.replace('#', '');
   const result = await axios
-    .post(`${API_URL}/post/hashTag`, { searchString, page, postLimit })
+    .post(`${API_URL}/post/hashTag`, { searchString, page, limit })
     .then((res) => {
       return res.data;
     })
