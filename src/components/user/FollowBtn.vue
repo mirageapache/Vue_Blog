@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import type { UserDataType } from '@/types/userType';
 import { errorAlert } from '@/utils/fetch';
 import { changeFollowState, followUser, unfollowUser } from '@/api/follow';
+
+library.add(faCaretDown);
 
 const props = defineProps<{
   user: UserDataType;
@@ -78,7 +83,10 @@ const handleChangeState = async (state: number) => {
     >
       追蹤
     </button>
-      <div className="absolute w-28 border rounded-lg py-2 px-1 top-12 right-0 bg-white dark:bg-gray-950 dark:border-gray-600 z-50">
+    <div
+      v-if="activeDropdown === user._id"
+      className="absolute w-28 border rounded-lg py-2 px-1 top-12 right-0 bg-white dark:bg-gray-950 dark:border-gray-600 z-50"
+    >
       <button
         v-if="user.followState === 1"
         type="button"
@@ -103,6 +111,6 @@ const handleChangeState = async (state: number) => {
         取消追蹤
       </button>
     </div>
-    <div class="fixed z-40 top-0 left-0 w-full h-full" @click="() => toggleDropdown('')" />
+    <div v-if="activeDropdown === user._id" class="fixed z-40 top-0 left-0 w-full h-full" @click="() => toggleDropdown('')" />
   </div>
 </template>

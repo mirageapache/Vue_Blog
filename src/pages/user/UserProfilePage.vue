@@ -14,6 +14,8 @@ import NoSearchResult from '@/components/tips/NoSearchResult.vue';
 import Spinner from '@/components/tips/Spinner.vue';
 import ProfileArticle from '@/components/profile/ProfileArticle.vue';
 import ProfilePost from '@/components/profile/ProfilePost.vue';
+import ProfileFollowed from '@/components/profile/ProfileFollowed.vue';
+import ProfileFollowing from '@/components/profile/ProfileFollowing.vue';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();

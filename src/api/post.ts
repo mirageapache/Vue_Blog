@@ -45,8 +45,6 @@ export async function getSearchPost(
     result = await axios
       .post(`${API_URL}/post/search`, { searchString, authorId, page, limit })
       .then((res) => {
-        console.log(res);
-
         return res.data;
       })
       .catch((error) => {
