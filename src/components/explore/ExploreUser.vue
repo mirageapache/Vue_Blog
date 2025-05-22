@@ -19,8 +19,6 @@ const fetchUsers = async () => {
   isLoading.value = true;
   try {
     const res = await getSearchUserList(nextPage.value, searchString as string, currentUser);
-    
-    console.log(res);
 
     if (res) {
       userList.value.push(...res.userList);

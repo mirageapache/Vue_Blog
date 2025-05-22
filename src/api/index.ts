@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxResponseType } from '@/types/apiType';
 export const API_URL = import.meta.env.VITE_API_URL;
-export const postLimit = 10;
+export const limit = 5;
 
 interface ResultType extends AxResponseType {
   article: number;

@@ -12,6 +12,8 @@ import FollowBtn from '@/components/user/FollowBtn.vue';
 import { useAuthStore } from '@/store/auth';
 import NoSearchResult from '@/components/tips/NoSearchResult.vue';
 import Spinner from '@/components/tips/Spinner.vue';
+import ProfileArticle from '@/components/profile/ProfileArticle.vue';
+import ProfilePost from '@/components/profile/ProfilePost.vue';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
@@ -24,7 +26,7 @@ const state = reactive({ userData: userStateData })
 const activeTab = ref('article');
 const activeStyle = ref('translate-x-0');
 const authToken = Cookies.get('authToken');
-const userId = route.params.id;
+const userId = route.params.id as string;
 if (isEmpty(userId) || userId.length === 0) router.push('/notFound');
 const currentUserId = getCookies('uid');
 let identify = currentUserId === userId && !isEmpty(authToken); // 驗證身分使當前使用者
@@ -162,7 +164,7 @@ const handleTabActive = (tabValue: string) => {
     
           <!--  文章 Article -->
           <div v-if="activeTab === 'article'">
-            <ProfileArticle :userId="userId!" :identify="identify" />
+            <ProfileArticle :userId="userId" :identify="identify" />
           </div>
           
     

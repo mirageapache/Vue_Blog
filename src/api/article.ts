@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL, postLimit } from './index';
+import { API_URL, limit } from './index';
 import type { ArticleDataType } from '../types/articleType';
 import type { AxResponseType } from '../types/apiType';
 import Cookies from 'js-cookie';
@@ -39,7 +39,7 @@ export async function getPartialArticles(page: number): Promise<ArticlePageListT
   let result = null;
   if (page > 0) {
     result = await axios
-      .post(`${API_URL}/article/partial`, { page, postLimit })
+      .post(`${API_URL}/article/partial`, { page, limit })
       .then((res) => {
         return res.data;
       })
@@ -72,7 +72,7 @@ export async function getSearchArticle(
   let result = null;
   if (page && page > 0) {
     result = await axios
-      .post(`${API_URL}/article/search`, { searchString, authorId, page, postLimit })
+      .post(`${API_URL}/article/search`, { searchString, authorId, page, limit })
       .then((res) => {
         return res.data;
       })
@@ -90,7 +90,7 @@ export async function createArticle(
   content: string
 ): Promise<ArticleApiType> {
   const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
+    headers: { Authorization: `Bearer ${authToken}` }
   };
   const variables = { userId, title, content, clientType: '' };
   const result = await axios
@@ -113,7 +113,7 @@ export async function updateArticle(
   content: string
 ): Promise<ArticleApiType> {
   const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
+    headers: { Authorization: `Bearer ${authToken}` }
   };
   const variables = { articleId, userId, title, content, clientType: '' };
   const result = await axios
@@ -132,7 +132,7 @@ export async function updateArticle(
 export async function deleteArticle(articleId: string, userId: string) {
   const config = {
     headers: { Authorization: `Bearer ${authToken}` },
-    data: { articleId }, // 在 delete 請求中，必須在 config 裡加上 data
+    data: { articleId } // 在 delete 請求中，必須在 config 裡加上 data
   };
   const result = await axios
     .delete(`${API_URL}/article/delete/${userId}`, config)
@@ -149,7 +149,7 @@ export async function deleteArticle(articleId: string, userId: string) {
 /** 喜歡/取消喜歡文章 */
 export async function toggleLikeArticle(articleId: string, userId: string, action: boolean) {
   const config = {
-    headers: { Authorization: `Bearer ${authToken}` },
+    headers: { Authorization: `Bearer ${authToken}` }
   };
   const result = await axios
     .patch(`${API_URL}/article/toggleLikeAction/${userId}`, { articleId, userId, action }, config)
