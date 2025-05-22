@@ -5,6 +5,9 @@ import UserProfilePage from '@/pages/user/UserProfilePage.vue';
 import EditProfilePage from '@/pages/user/EditProfilePage.vue';
 import ExplorePage from '@/pages/ExplorePage.vue';
 import PostDetailPage from '@/pages/post/PostDetailPage.vue';
+import ArticleDetailPage from '@/pages/article/ArticleDetailPage.vue';
+import ArticleCreatePage from '@/pages/article/ArticleCreatePage.vue';
+import ResetPasswordPage from '@/pages/ResetPasswordPage.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -19,16 +22,16 @@ const router = createRouter({
       name: 'explore',
       component: ExplorePage
     },
-    // {
-    //   path: '/article/:id',
-    //   name: 'article',
-    //   component: ArticlesPage
-    // },
-    // {
-    //   path: '/article/create',
-    //   name: 'articleCreate',
-    //   component: ArticleCreatePage
-    // },
+    {
+      path: '/article/:id',
+      name: 'article',
+      component: ArticleDetailPage
+    },
+    {
+      path: '/article/create',
+      name: 'articleCreate',
+      component: ArticleCreatePage
+    },
     {
       path: '/post/:id',
       name: 'post',
@@ -44,11 +47,11 @@ const router = createRouter({
       name: 'userProfileEdit',
       component: EditProfilePage
     },
-    // {
-    //   path: '/resetPassword',
-    //   name: 'resetPassword',
-    //   component: ResetPasswordPage
-    // },
+    {
+      path: '/resetPassword',
+      name: 'resetPassword',
+      component: ResetPasswordPage
+    },
     {
       path: '/:pathMatch(.*)*',
       name: 'notFound',

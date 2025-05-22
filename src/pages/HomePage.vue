@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { getPartialPosts } from '@/api/post';
 import PostListDynamic from '@/components/post/PostListDynamic.vue';
-import PostListLoading from '@/components/post/PostListLoading.vue';
 import type { PostDataType } from '@/types/postType';
 
 const page = ref(1);
@@ -12,38 +11,43 @@ const { postList } = state;
 const isLoading = ref(false);
 
 const fetchPosts = async () => {
+  if (isLoading.value) return;
   isLoading.value = true;
   try {
     const result = await getPartialPosts(page.value);
     if (result && !result.isAxiosError) {
-      postList.length = 0; // 清空陣列
-      postList.push(...result.posts); // 添加新數據
+      postList.push(...result.posts);
+      page.value = result.nextPage;
     }
   } finally {
     isLoading.value = false;
   }
 };
 
-// 在組件掛載時獲取資料
+/** 滾動判斷fetch新資料 */
+const handleScroll = () => {
+  if (
+    window.innerHeight + document.documentElement.scrollTop >=
+    document.documentElement.offsetHeight - 100
+  ) {
+    if (page.value > 0) fetchPosts();
+  }
+};
+
+// 在組件掛載時獲取資料並添加滾動事件監聽
 onMounted(() => {
   fetchPosts();
+  window.addEventListener('scroll', handleScroll);
+});
+
+// 組件卸載時移除事件監聽器
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
 <template>
   <div class="w-full max-w-[600px] p-1 sm:p-0">
-    <div v-if="isLoading" class="text-center py-4">
-      <PostListLoading />
-    </div>
-    <div v-else-if="postList.length === 0" class="text-center py-4">
-      沒有找到貼文
-    </div>
-    <PostListDynamic
-      :postListData="postList"
-      :isLoading="isLoading"
-      :atBottom="page < 0"
-    />
+    <PostListDynamic :postListData="postList" :isLoading="isLoading" :atBottom="page < 0" />
   </div>
 </template>
-
-

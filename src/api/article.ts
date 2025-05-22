@@ -53,7 +53,7 @@ export async function getPartialArticles(page: number): Promise<ArticlePageListT
 /** 取得特定文章內容 */
 export async function getArticleDetail(articleId: string): Promise<ArticleApiType> {
   const result = await axios
-    .post(`${API_URL}/article/detail`, { articleId })
+    .post(`${API_URL}/article/detail`, { articleId, clientType: '' })
     .then((res) => {
       return res;
     })
@@ -92,7 +92,7 @@ export async function createArticle(
   const config = {
     headers: { Authorization: `Bearer ${authToken}` },
   };
-  const variables = { userId, title, content };
+  const variables = { userId, title, content, clientType: '' };
   const result = await axios
     .post(`${API_URL}/article/create/${userId}`, variables, config)
     .then((res) => {
@@ -115,7 +115,7 @@ export async function updateArticle(
   const config = {
     headers: { Authorization: `Bearer ${authToken}` },
   };
-  const variables = { articleId, userId, title, content };
+  const variables = { articleId, userId, title, content, clientType: '' };
   const result = await axios
     .patch(`${API_URL}/article/update/${userId}`, variables, config)
     .then((res) => {

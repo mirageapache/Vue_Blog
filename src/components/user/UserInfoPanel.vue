@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useMainStore } from '@/store';
 import { scrollToTop } from '@/utils/common';
-import { defineProps } from 'vue';
 import Avatar from './Avatar.vue';
 
 const props = defineProps<{
