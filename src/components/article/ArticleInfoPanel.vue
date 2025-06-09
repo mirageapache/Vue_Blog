@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { get, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -38,7 +38,7 @@ const router = useRouter();
 const { articleData, title, hasContent } = props;
 const commentInput = ref<HTMLDivElement | null>(props.commentInput);
 const currentUserId = getCookies('uid');
-const editMode = mainStore.editMode;
+const editMode = computed(() => mainStore.editMode);
 const article = ref(articleData);
 const isLike = !isEmpty(article.value.likedByUsers.find((item) => item._id === currentUserId)); // 顯示是否喜歡該貼文
 const likeCount = article.value.likedByUsers.length; // 喜歡數

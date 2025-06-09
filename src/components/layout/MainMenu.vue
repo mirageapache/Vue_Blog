@@ -152,7 +152,6 @@ const handleLogout = () => {
                 () => {
                   closeMenu();
                   mainStore.setActivePage('write');
-                  mainStore.setEditMode(true);
                   scrollToTop();
                 }
               "

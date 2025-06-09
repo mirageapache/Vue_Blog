@@ -74,7 +74,6 @@ const userId = getCookies('uid');
         @change-item="
           () => {
             mainStore.setActivePage('write');
-            mainStore.setEditMode(true);
           }
         "
       >

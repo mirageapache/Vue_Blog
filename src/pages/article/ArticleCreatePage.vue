@@ -27,7 +27,7 @@ const isLoading = ref(false);
 const title = ref('');
 const content = ref('');
 const router = useRouter();
-const editor = ref<any>(null);
+const editor = ref<Editor | null>(null);
 const isEditorReady = ref(false);
 
 onMounted(() => {

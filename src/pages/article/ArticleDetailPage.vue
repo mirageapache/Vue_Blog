@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -39,7 +39,7 @@ const isLoading = ref(false);
 const articleData = ref<ArticleDataType>();
 const title = ref('');
 const content = ref('');
-const editor = ref<any>(null);
+const editor = ref<Editor | null>(null);
 const isEditorReady = ref(false);
 const editMode = computed(() => mainStore.editMode);
 const commentContent = ref('');
@@ -180,8 +180,12 @@ const handleSubmit = async () => {
             class="hidden sm:flex items-center mr-4 p-2 text-gray-500 hover:text-orange-500 xl:absolute xl:left-5"
             @click="
               () => {
-                if (editMode) mainStore.setEditMode(false);
-                else handleBackward();
+                if (editMode) {
+                  editMode = false;
+                  mainStore.setEditMode(false);
+                } else {
+                  handleBackward();
+                }
               }
             "
           >
