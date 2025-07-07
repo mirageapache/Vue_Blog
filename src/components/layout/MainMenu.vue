@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { getOwnProfile } from '@/api/user';
+import { watch, computed } from 'vue';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -21,7 +22,6 @@ import { useRouter } from 'vue-router';
 import { checkLogin, scrollToTop } from '@/utils/common';
 import MenuItem from '@/components/layout/MenuItem.vue';
 import UserInfoPanel from '../user/UserInfoPanel.vue';
-import type { UserDataType } from '@/types/userType';
 
 library.add(faHome, faCompass, faPenNib, faPenToSquare, faSun, faMoon, faRightFromBracket, faXmark);
 
@@ -35,7 +35,7 @@ const emit = defineEmits<{
 const router = useRouter();
 const mainStore = useMainStore();
 const userStore = useUserStore();
-const userData = ref<UserDataType | null>(userStore.userData);
+const userData = computed(() => userStore.userData);
 const toggleMenuAnimation = computed(() => props.toggleMenuAnimation);
 
 /** 關閉選單 */
@@ -50,14 +50,40 @@ const handleLogout = () => {
   Swal.fire({
     title: '已成功登出',
     icon: 'info',
+    timer: 2000,
+    timerProgressBar: true,
     confirmButtonText: '確認'
   }).then(() => {
     closeMenu();
     mainStore.setActivePage('home');
+    Cookies.remove('authToken');
+    Cookies.remove('uid');
     router.push('/');
     window.location.reload();
   });
 };
+
+/** 取得個人資料 */
+const getUserProfile = async () => {
+  const userId = Cookies.get('uid') || '';
+  const authToken = Cookies.get('authToken') || '';
+  if (!userId || !authToken) return;
+  const res = await getOwnProfile(userId, authToken);
+  if (res.status === 200 && res.data) {
+    userStore.setUserData(res.data);
+  }
+};
+
+// 監聽 userStore.userData，若沒資料則自動取得
+watch(
+  () => userStore.userData,
+  (val) => {
+    if (checkLogin() && (!val || !val._id)) {
+      getUserProfile();
+    }
+  },
+  { immediate: true, deep: true }
+);
 </script>
 
 <template>
@@ -84,10 +110,10 @@ const handleLogout = () => {
         </button>
       </div>
       <div v-if="checkLogin()" class="px-3 border-b-[1px] border-gray-400 dark:border-gray-70">
-        <UserLoading v-if="isEmpty(userData)" withBorder="{false}" />
+        <UserLoading v-if="isEmpty(userData._id)" withBorder="{false}" />
         <router-link
           v-else
-          to="/user/profile/{{userData!.userId}}"
+          :to="`/user/profile/${userData._id}`"
           @click="
             () => {
               closeMenu();
@@ -97,7 +123,7 @@ const handleLogout = () => {
           "
         >
           <UserInfoPanel
-            :userId="userData!.userId"
+            :userId="userData._id"
             :account="userData!.account"
             :name="userData!.name"
             :avatarUrl="userData!.avatar"

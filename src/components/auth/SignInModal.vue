@@ -85,6 +85,8 @@ const submitSignIn = async (role?: string) => {
         Swal
           .fire({
             title: '登入成功',
+            timer: 2000,
+            timerProgressBar: true,
             icon: 'success',
             confirmButtonText: '確認',
           })
