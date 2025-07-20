@@ -2,7 +2,7 @@
 import { computed, reactive, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHeart, faComment, faShare } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faComment, faShare, faSquarePen } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { isEmpty } from 'lodash';
 import { usePostStore } from '@/store/post';
@@ -13,7 +13,7 @@ import { checkLogin, getCookies } from '@/utils/common';
 import { HINT_LABEL } from '@/constants/LayoutConstants';
 import { toggleLikePost } from '@/api/post';
 
-library.add(faHeart, faComment, faShare, faHeartRegular);
+library.add(faHeart, faComment, faShare, faHeartRegular, faSquarePen);
 
 const props = defineProps<{
   postData: PostDataType;
@@ -33,8 +33,7 @@ const url = window.location.toString();
 const isLike = computed(() => !isEmpty(post.likedByUsers.find((item) => item._id === userId)));
 
 /** 喜歡/取消喜歡貼文 */
-const handleLikePost = async (e: any) => {
-  e.stopPropagation();
+const handleLikePost = async () => {
   if (!checkLogin()) {
     authStore.setSignInPop(true);
     return;
@@ -68,8 +67,7 @@ const shareToLine = () => {
 };
 
 /** 處理編輯貼文按鈕 */
-const handleClickEdit = (e: any) => {
-  e.stopPropagation();
+const handleClickEdit = () => {
   postStore.setPostId(post._id);
   postStore.setPostData(post);
   postStore.setShowEditModal(true);
@@ -86,7 +84,7 @@ const handleClickEdit = (e: any) => {
         :count="likeCount || 0"
         faClass="text-red-500 hover:text-gray-400"
         tipClass="w-20"
-        :handle-click="handleLikePost"
+        @handle-click="handleLikePost"
       >
         <template #icon>
           <font-awesome-icon :icon="['fas', 'heart']" class="w-5 h-5 m-1.5" />
@@ -98,7 +96,7 @@ const handleClickEdit = (e: any) => {
         :count="likeCount || 0"
         faClass="text-gray-400 dark:text-gray-100 hover:text-red-500 dark:hover:text-red-500"
         tipClass="w-12"
-        :handle-click="handleLikePost"
+        @handle-click="handleLikePost"
       >
         <template #icon>
           <font-awesome-icon :icon="['far', 'heart']" class="w-5 h-5 m-1.5" />
@@ -111,7 +109,7 @@ const handleClickEdit = (e: any) => {
         :count="commentCount || 0"
         faClass="text-gray-400 dark:text-gray-100 hover:text-blue-500 dark:hover:text-blue-500"
         tipClass="w-12"
-        :handle-click="() => {}"
+        @handle-click="() => {}"
       >
         <template #icon>
           <font-awesome-icon :icon="['fas', 'comment']" class="w-5 h-5 m-1.5" />
@@ -127,7 +125,7 @@ const handleClickEdit = (e: any) => {
           :count="post.shareCount || undefined"
           faClass="text-gray-400 dark:text-gray-100 hover:text-orange-500 dark:hover:text-orange-500"
           tipClass="w-12"
-          :handle-click="() => (showShareInfo = !showShareInfo)"
+          @handle-click="() => (showShareInfo = !showShareInfo)"
         >
           <template #icon>
             <font-awesome-icon :icon="['fas', 'share']" class="w-5 h-5 m-1.5" />
@@ -173,7 +171,7 @@ const handleClickEdit = (e: any) => {
           :count="undefined"
           faClass="text-gray-400 dark:text-gray-100 hover:text-orange-500 dark:hover:text-orange-500"
           tipClass="w-12"
-          :handle-click="handleClickEdit"
+          @handle-click="handleClickEdit"
         >
           <template #icon>
             <font-awesome-icon :icon="['fas', 'square-pen']" class="w-5 h-5 m-1.5" />

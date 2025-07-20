@@ -5,7 +5,6 @@ import type { PostDataType } from '@/types/postType';
 import { getSearchPost } from '@/api/post';
 import NoSearchResult from '../tips/NoSearchResult.vue';
 import PostListDynamic from '../post/PostListDynamic.vue';
-import PostListLoading from '../post/PostListLoading.vue';
 
 const props = defineProps<{
   userId: string;

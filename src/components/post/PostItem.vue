@@ -42,8 +42,7 @@ const handleClickPost = () => {
 };
 
 /** 刪除貼文 */
-const handleDelete = (e: Event) => {
-  e.stopPropagation();
+const handleDelete = () => {
   if (isCurrentUser) {
     Swal
       .fire({
@@ -77,7 +76,7 @@ const handleDelete = (e: Event) => {
 
 <template>
   <div class="flex text-left border-b-[1px] dark:border-gray-700 p-3 last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-    <div class="w-full" @click={handleClickPost}>
+    <div class="w-full" @click="handleClickPost">
       <div class="flex justify-between">
         <UserInfoPanel
           :userId="author._id"
@@ -125,7 +124,7 @@ const handleDelete = (e: Event) => {
             :count="undefined"
             faClass="text-gray-400 dark:text-gray-100 hover:text-orange-500 dark:hover:text-orange-500"
             tipClass="w-12"
-            :handle-delete="handleDelete"
+            @handle-click="handleDelete"
           >
             <template #icon>
               <font-awesome-icon :icon="['fas', 'trash-can']" class="w-5 h-5 m-1.5" />

@@ -15,16 +15,16 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'handleDelete', event: Event): void;
+  (e: 'handleClick', event: Event): void;
 }>();
 
 const { count, tipText, tipClass, faClass } = props;
 const showTip = ref(false);
 
-const handleDelete = (event: Event) => {
-  emit('handleDelete', event);
-};
-
+const handleClick = (event: Event) => {
+  event.stopPropagation();
+  emit('handleClick', event);
+}
 </script>
 
 <template>
@@ -37,7 +37,7 @@ const handleDelete = (event: Event) => {
       type="button"
       class="flex justify-center items-center"
       :class="faClass"
-      @click="(e) => handleDelete(e)"
+      @click="(e) => handleClick(e)"
     >
       <slot name="icon"></slot>
     </button>
