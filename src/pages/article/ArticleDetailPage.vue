@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -46,8 +46,9 @@ const commentContent = ref('');
 const showPlaceholder = ref(true);
 const commentInput = ref<HTMLDivElement | null>(null);
 const commentList = ref<CommentDataType[]>([]);
+const isCommentInputReady = ref(false);
 
-onMounted(() => {
+onMounted(async () => {
   getArticleData();
 
   // 初始化Tiptap編輯器
@@ -71,6 +72,10 @@ onMounted(() => {
       isEditorReady.value = true;
     }
   });
+
+  // 等待 DOM 建立完成後再設定 commentInput
+  await nextTick();
+  isCommentInputReady.value = true;
 });
 
 // 監聽編輯模式變更
@@ -206,6 +211,7 @@ const handleSubmit = async () => {
 
             <!-- 文章資訊 -->
             <ArticleInfoPanel
+              v-if="isCommentInputReady && commentInput"
               :articleData="articleData"
               :commentInput="commentInput"
               :title="articleData.title"

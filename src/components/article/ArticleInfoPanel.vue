@@ -19,7 +19,7 @@ library.add(faHeart, faHeartRegular, faComment, faSquarePen, faTrashCan);
 
 const props = defineProps<{
   articleData: ArticleDataType;
-  commentInput: HTMLDivElement | null;
+  commentInput: HTMLDivElement;
   title: string;
   hasContent: boolean;
 }>();
@@ -36,14 +36,15 @@ const mainStore = useMainStore();
 const authStore = useAuthStore();
 const router = useRouter();
 const { articleData, title, hasContent } = props;
-const commentInput = ref<HTMLDivElement | null>(props.commentInput);
+const commentInput = ref<HTMLDivElement>(props.commentInput);
 const currentUserId = getCookies('uid');
 const editMode = computed(() => mainStore.editMode);
 const article = ref(articleData);
-const isLike = !isEmpty(article.value.likedByUsers.find((item) => item._id === currentUserId)); // 顯示是否喜歡該貼文
-const likeCount = article.value.likedByUsers.length; // 喜歡數
-const commentCount = article.value.comments.length; // 留言數
-const isCurrentUser = currentUserId === article.value.author._id;
+
+const isLike = computed(() => !isEmpty(article.value.likedByUsers.find((item) => item._id === currentUserId))); // 顯示是否喜歡該貼文
+const likeCount = computed(() => article.value.likedByUsers.length); // 喜歡數
+const commentCount = computed(() => article.value.comments.length); // 留言數
+const isCurrentUser = computed(() => currentUserId === article.value.author._id);
 
 /** 喜歡/取消喜歡貼文 */
 const handleLikeArticle = async (e: Event) => {
@@ -53,8 +54,8 @@ const handleLikeArticle = async (e: Event) => {
     return;
   }
 
-  const res = await toggleLikeArticle(article.value._id, currentUserId!, !isLike);
-  if (res.success) {
+  const res = await toggleLikeArticle(article.value._id, currentUserId!, !isLike.value);
+  if (res.code === "SUCCESS") {
     article.value = res.updateResult;
   } else {
     errorAlert();
@@ -70,7 +71,7 @@ const handleClickEdit = (e: Event) => {
 /** 刪除文章 */
 const handleDelete = async (e: Event) => {
   e.stopPropagation();
-  if (isCurrentUser) {
+  if (isCurrentUser.value) {
     Swal.fire({
       title: '確定要刪除此文章嗎？',
       text: '確定後會立即刪除文章',
